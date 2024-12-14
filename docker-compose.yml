@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+
+  api:
+    build: #Docker va construire l'image docker à partir du Dockerfile situé dans le dossier ./backend qui est Dockerfile
+      context: ./backend
+      dockerfile: docker/docker_files/Dockerfile
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: #Cela signifie que tout changement que tu fais dans ton code (sur ton ordinateur) se répercutera dans le conteneur, ce qui est très pratique pendant le développement.
+    #yaeni ano ay modification tkon f le code hna fel pc, rah tzid troh lel conteneur docker li criyitou
+      - ./backend:/code
+    ports:
+      - 8000:8000 #Le port 8000 du conteneur sera accessible sur le port 8000 de ton ordinateur. Cela te permet d'accéder à ton API via http://localhost:8000
+    env_file:  #l charge un fichier .env qui pourrait contenir des variables d'environnement (comme des clés API, des configurations de base de données, etc.).
+      - .env
+
+  db:
+    image: mysql:5.7  # Utilisez l'image officielle de MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: Anis021538784
+      MYSQL_DATABASE: medCare_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Anis021538784
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"  #3306 c'est le port de db interne au conteneur => les conteneur entre eux dans docker vont communiquer avecc db sur leport 3306
+      #ida tu voulais connecter a la db via lhote exeterne (externe au docker) tu dois utilisé le port 3307, car le port 3307 de localhost est asssocieer a 3306 du docker
+
+volumes:
+  db_data:  # Stockage persistant des données de MySQL
