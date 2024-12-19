@@ -1,3 +1,137 @@
 from django.db import models
+from patients.models import Patient
+from django.utils.timezone import now
 
-# Create your models here.
+
+class Medecin(models.Model):
+    class SpecialiteChoices(models.TextChoices):
+        CARDIOLOGIE = 'CARD', 'Cardiologie'
+        PEDIATRIE = 'PED', 'Pédiatrie'
+        ORTHOPEDIE = 'ORTH', 'Orthopédie'
+        DERMATOLOGIE = 'DERM', 'Dermatologie'
+        GENERALISTE = 'GEN', 'Médecin généraliste'
+
+    Medecin_ID = models.AutoField(primary_key=True)
+    Nom = models.CharField(max_length=100)
+    Prenom = models.CharField(max_length=100)
+    Specialite = models.CharField(
+        max_length=5,
+        choices=SpecialiteChoices.choices,
+        default=SpecialiteChoices.GENERALISTE
+    )
+    Telephone = models.CharField(max_length=15)
+    Email = models.EmailField()
+    MotDePasse = models.CharField(max_length=100)
+    patients = models.ManyToManyField(Patient, related_name='medecins')
+
+    
+    
+    def __str__(self):
+        return f"Dr. {self.Nom} {self.Prenom} - {self.get_Specialite_display()}"
+
+
+class Infirmier(models.Model):
+    Nom = models.TextField()
+    Prenom = models.TextField()
+    Telephone = models.TextField(max_length=15)
+    Email = models.EmailField()
+    
+    def __str__(self):
+        return f"Infirmier {self.Nom} {self.Prenom} "
+    
+class Laborantin(models.Model):
+    Nom = models.TextField()
+    Prenom = models.TextField()
+    Telephone = models.TextField(max_length=15)
+    Email = models.EmailField()    
+    def __str__(self):
+        return f"Laborantin {self.Nom} {self.Prenom} "
+
+class Consultation(models.Model):
+    Consultation_ID = models.AutoField(primary_key=True)
+    Patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="consultations")
+    Medecin = models.ForeignKey(Medecin, on_delete=models.CASCADE, related_name="consultations")
+    Motif = models.TextField()
+    Datecons = models.DateField(auto_now=True)
+    Diagnostic = models.TextField()
+    
+    def __str__(self):
+       return f"Consultation faite par Dr{self.Medecin} pour{self.Patient} "
+    
+
+
+class Certificat(models.Model):
+     Consultation = models.ForeignKey(Consultation , on_delete=models.CASCADE , related_name="certificats")
+     Datecert = models.DateField(blank=True)
+     Description = models.TextField()
+     
+     def save(self, *args, **kwargs):
+        if not self.Datecert:  # Ne pas écraser si déjà défini
+            self.Datecert = self.Consultation.Datecons  # Copier la date de la consultation
+        super().save(*args, **kwargs)  # Appel à la méthode `save` parente
+        
+     def __str__(self):
+       return f"Certificat fait par Dr{self.Consultation.Medecin} pour{self.Consultation.Patient} "
+   
+class Medicament(models.Model):
+    Nom = models.TextField()
+    Dosage = models.TextField()
+    Fabricant = models.TextField()
+    Forme = models.CharField(max_length=100, choices=[
+        ('comprimé', 'Comprimé'),
+        ('sirop', 'Sirop'),
+        ('capsule', 'Capsule'),
+        ('pommade', 'Pommade'),
+        ('autre', 'Autre'),
+    ], default='autre')    
+    
+    def __str__(self):
+       return f"{self.Nom} sous forme de {self.Forme} "
+   
+
+class Ordonnance(models.Model):
+     Consultation = models.ForeignKey(Consultation , on_delete=models.CASCADE , related_name="ordonnances")
+     Medicaments = models.ManyToManyField(Medicament, through='OrdonnanceMedicament', related_name="ordonnances")
+     Description = models.TextField()
+     
+
+     def __str__(self):
+        return f"Ordonnance #{self.id} pour {self.Consultation.Patient} par Dr. {self.Consultation.Medecin}"
+          
+
+class OrdonnanceMedicament(models.Model):
+        Ordonnance = models.ForeignKey(Ordonnance, on_delete=models.CASCADE, related_name="ordonnance_medicaments")
+        Medicament = models.ForeignKey(Medicament, on_delete=models.CASCADE, related_name="ordonnance_medicaments")
+        Posologie = models.CharField(max_length=200)  # Exemple : "2 fois par jour pendant 7 jours"
+
+        def __str__(self):
+          return f"{self.Medicament.Nom} ({self.Posologie}) pour l'ordonnance #{self.Ordonnance.id}"
+      
+  
+class Soininfirmier(models.Model):
+        Infirmier =  models.ForeignKey(Infirmier, on_delete=models.CASCADE, related_name="soininfirmier")
+        Patient  =   models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="soininfirmier")
+        Date = models.DateField(auto_now=True)
+        Description = models.TextField()
+        def __str__(self):
+          return f"{self.Infirmier.Nom} pour {self.Patient.Nom}"        
+     
+class Bilan(models.Model):
+         Medecin =    models.ForeignKey(Medecin, on_delete=models.CASCADE, related_name="bilan")   
+         Patient  =   models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="bilan")
+         Laborantin =  models.ForeignKey(Laborantin, on_delete=models.CASCADE, related_name="bilan")
+         Rapport =  models.TextField()
+         Date = models.DateField(auto_now=True)
+         
+         def __str__(self):
+            return f"Bilan par Dr{self.Medecin.Nom} pour {self.Patient.Nom}  "
+              
+      
+class Image(models.Model):
+        Titre = models.TextField()
+        Image = models.TextField()
+        Bilan = models.ForeignKey(Bilan, on_delete=models.CASCADE, related_name="image") 
+        
+        def __str__(self):
+          return f"{self.Titre} "
+      

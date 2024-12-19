@@ -16,6 +16,9 @@ Including another URLconf
 from django.urls import path
 from django.contrib import admin
 from rest_framework import routers
+from medecins.views import MedecinProfileView , ConsultationCheckView
+from patients.views import PatientProfileView
+
 
 router = routers.DefaultRouter()
 
@@ -23,4 +26,10 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path('admin/', admin.site.urls),
+    path('Drprofile/', MedecinProfileView.as_view(), name='medecin-profile'),
+    path('Patprofile/',PatientProfileView.as_view(), name = "patient-profile"),
+    path('Consultations/',ConsultationCheckView.as_view(), name = "Consultations"),
+
+
+
 ]

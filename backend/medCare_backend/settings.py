@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'django_filters', #Used with DRF
     'rest_framework', #DRF package
     'core', # New app
+    'medecins',
+    'patients',
 ]
 
 MIDDLEWARE = [
@@ -95,11 +97,11 @@ WSGI_APPLICATION = 'medCare_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Moteur MySQL
-        'NAME': os.environ.get('DB_NAME', 'medCare_db'),  # Nom de la base de données
-        'USER': os.environ.get('DB_USER', 'admin'),  # Utilisateur MySQL
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),  # Mot de passe MySQL
-        'HOST': os.environ.get('DB_HOST', 'db'),  # Hôte de la base de données
-        'PORT': os.environ.get('DB_PORT', '3306'),  # Port MySQL
+        'NAME':'medcare_db',  # Nom de la base de données
+        'USER': 'root',  # Utilisateur MySQL
+        'PASSWORD': '2608004',  # Mot de passe MySQL
+        'HOST': 'localhost',  # Hôte de la base de données
+        'PORT': '3306',  # Port MySQL
     }
 }
 
