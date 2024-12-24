@@ -22,7 +22,8 @@ class Medecin(models.Model):
     Telephone = models.CharField(max_length=15)
     Email = models.EmailField()
     MotDePasse = models.CharField(max_length=100)
-    patients = models.ManyToManyField(Patient, related_name='medecins')
+    patients = models.ManyToManyField(Patient, related_name='medecins')  
+    #cela signfie qu'un medecin peut avoir plusieurs patients, et un patient peut avoir plusieurs medecins, et 2eme dis quon peut acceder a la liste des medecins d"un patient en utilsant patient.medecins
 
     
     
@@ -49,8 +50,10 @@ class Laborantin(models.Model):
 
 class Consultation(models.Model):
     Consultation_ID = models.AutoField(primary_key=True)
-    Patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="consultations")
-    Medecin = models.ForeignKey(Medecin, on_delete=models.CASCADE, related_name="consultations")
+    Patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="consultations")  
+    #foreignekey dis qune consultation peut avoir un patient, et un patient peut avoire plusiuer consultation, et 2eme argument dit si on supprime un patient, on supprime aussi ses consultations
+    #3eme argument dis qu'on peut acceder a la liste des consultations d'un patient en utilisant patient.consultations
+    Medecin = models.ForeignKey(Medecin,on_delete=models.CASCADE, related_name="consultations")
     Motif = models.TextField()
     Datecons = models.DateField(auto_now=True)
     Diagnostic = models.TextField()

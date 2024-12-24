@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from decouple import Config, RepositoryEnv
+from decouple import config, RepositoryEnv
 
 from pathlib import Path
 from dotenv import load_dotenv
@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "clesecrete"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'core', # New app
     'medecins',
     'patients',
+    'administrateurs'
 ]
 
 MIDDLEWARE = [
@@ -96,12 +97,15 @@ WSGI_APPLICATION = 'medCare_backend.wsgi.application'
 # Configuration de la base de données
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Moteur MySQL
-        'NAME':'medcare_db',  # Nom de la base de données
-        'USER': 'root',  # Utilisateur MySQL
-        'PASSWORD': '2608004',  # Mot de passe MySQL
-        'HOST': 'localhost',  # Hôte de la base de données
-        'PORT': '3306',  # Port MySQL
+        'ENGINE': config('ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': config('NAME', default='db.sqlite3'),
+        'USER': config('USER', default=''),
+        'PASSWORD': config('PASSWORD', default=''),
+        'HOST': config('HOST', default=''),
+        'PORT': config('PORT', default=''),
+        'TEST': {
+            'MIRROR': 'default',  # Force les tests à utiliser la base principale
+        },
     }
 }
 
