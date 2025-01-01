@@ -18,7 +18,7 @@ class MedecinViewSet(viewsets.ModelViewSet):
     filterset_fields = ['Specialite']      # Filter by Specialite
     search_fields = ['Nom', 'Prenom', 'Email']  # Search by Nom, Prenom, or Email
     ordering_fields = ['Nom', 'Prenom']     # Order by Nom or Prenom
-    # permission_classes = [IsAdminUser]  # Allow only admin users to access this viewset
+    permission_classes = [IsAdminUser]  # Allow only admin users to access this viewset
 
     @action(detail=True, methods=['get'])
     def consultations(self, request, pk=None):
@@ -38,7 +38,7 @@ class PatientViewSet(viewsets.ModelViewSet):  #viewset permet de definir les act
     filterset_fields = ['Mutuelle']
     search_fields = ['Nom', 'Prenom', 'NSS', 'Telephone']
     ordering_fields = ['Nom', 'Prenom', 'DateNaissance', 'DateMaj']
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):  #Cette méthode permet de choisir dynamiquement quel serializer utiliser en fonction de l'action effectuée sur le Patient.
         if self.action == 'retrieve':   #si l'action est retrieve, donc on veut recuperer un seul objet, on utilise le serializer PatientDetailSerializer
@@ -70,7 +70,7 @@ class InfirmierViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['Nom', 'Prenom', 'Email']
     ordering_fields = ['Nom', 'Prenom']
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 class LaborantinViewSet(viewsets.ModelViewSet):
     queryset = Laborantin.objects.all()
@@ -78,10 +78,10 @@ class LaborantinViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['Nom', 'Prenom', 'Email']
     ordering_fields = ['Nom', 'Prenom']
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 class AllHealthcareWorkersViewSet(ViewSet):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
     def list(self, request):
         # Retrieve all objects from each model
