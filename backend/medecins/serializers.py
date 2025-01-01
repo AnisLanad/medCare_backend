@@ -2,10 +2,12 @@ from rest_framework import serializers
 from .models import (
     Medecin, Infirmier, Laborantin, Consultation, Certificat,
     Medicament, Ordonnance, OrdonnanceMedicament, Soininfirmier,
-    Bilan, Image
+    Bilan, Image , CustomUser
 )
 from patients.serializers import PatientSerializer  # Assure-toi que ce chemin est correct
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import AccessToken
+from patients.models import Patient
 
 class MedecinSerializer(serializers.ModelSerializer):
     # Le champ Specialite sera automatiquement géré comme un champ choice
@@ -110,3 +112,24 @@ class ConsultationDetailSerializer(ConsultationSerializer):
         fields = ConsultationSerializer.Meta.fields + ['certificats', 'ordonnances']
 
 
+    
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        # Vérifier si un utilisateur existe avec le `username` fourni
+        username = attrs.get("username")
+        if not CustomUser.objects.filter(username=username).exists():
+            raise serializers.ValidationError("Utilisateur introuvable.")
+
+        # Appel au sérialiseur parent pour continuer la validation
+        data = super().validate(attrs)
+        
+        # Ajouter des informations supplémentaires au token si nécessaire
+        data['role'] = self.user.role
+        data['username'] = self.user.username
+        return 
+    
+
+class AllPatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient
+        fields = ['DPI_ID', 'Nom', 'Prenom', 'DateNaissance', 'NSS']

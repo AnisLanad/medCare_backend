@@ -16,7 +16,7 @@ class PatientSerializer(serializers.ModelSerializer):
             'DPI_ID', 'Nom', 'Prenom', 'DateNaissance', 
             'Adresse', 'Telephone', 'NSS', 'Mutuelle',
             'mutuelle_display', 'NumPerCont', 'DateMaj',
-            'age'
+            'age' , "Email"
         ]
         extra_kwargs = {
             'MotDePasse': {'write_only': True},

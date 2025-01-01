@@ -17,6 +17,7 @@ class Patient(models.Model):
     Adresse = models.CharField(max_length=100)
     Telephone = models.CharField(max_length=15)
     NSS  = models.CharField(max_length=20)
+    Email = models.EmailField(null=True)
     
     Mutuelle = models.CharField(
         max_length=5,

@@ -2,17 +2,24 @@ from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.views import APIView
+from patients.models import Patient
+from datetime import date
+
+
+
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
     Medecin, Infirmier, Laborantin, Consultation, Certificat,
     Medicament, Ordonnance, OrdonnanceMedicament, Soininfirmier,
-    Bilan, Image
+    Bilan, Image , CustomUser
 )
 from .serializers import (
     MedecinSerializer, InfirmierSerializer, LaborantinSerializer,
     ConsultationSerializer, ConsultationDetailSerializer, CertificatSerializer,
     MedicamentSerializer, OrdonnanceSerializer, OrdonnanceMedicamentSerializer,
-    SoininfirmierSerializer, BilanSerializer, ImageSerializer
+    SoininfirmierSerializer, BilanSerializer, ImageSerializer , CustomTokenObtainPairSerializer , AllPatientSerializer
 )
 
 class MedecinViewSet(viewsets.ModelViewSet):
@@ -22,13 +29,16 @@ class MedecinViewSet(viewsets.ModelViewSet):
     filterset_fields = ['Specialite']      #permet de filtrer les medecin par sepécialité
     search_fields = ['Nom', 'Prenom', 'Email']  #permet de rechercher un medecin par nom, prenom ou email
     ordering_fields = ['Nom', 'Prenom']     #permet de trier les medecins par nom ou prenom
-
+    
     @action(detail=True, methods=['get'])
     def consultations(self, request, pk=None): #permet de récupérer la liste de consultation associé a un medecin, pourquoi ?, parce que c'est une relation de clé étrangère, ca veut dire qu'un medecin peut avoir plusieurs consultations, donc on doit pouvoir récupérer les consultations associé a un medecin, c'est pour cela qu'on a crée cette action
         medecin = self.get_object() #on récupère le medecin
         consultations = medecin.consultations.all() #on récupère les consultations associé a ce medecin
         serializer = ConsultationSerializer(consultations, many=True)
         return Response(serializer.data)
+    
+   
+         
 
 class InfirmierViewSet(viewsets.ModelViewSet):
     queryset = Infirmier.objects.all()
@@ -116,3 +126,44 @@ class ImageViewSet(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['Bilan']
+    
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer    
+    
+class GetNomPrenom(APIView):
+    def get(self,request, username ,role): 
+        if (role == "medecin" ):
+            personne = Medecin.objects.get(Email = username)
+        if ( role == "patient"):
+            personne = Patient.objects.get(Email = username)
+ 
+        return Response({"Nom" : personne.Nom ,"Prenom": personne.Prenom})
+    
+
+class GetPatients(APIView):
+    def get(self, request , username):
+         medecin = Medecin.objects.get(Email = username)
+         patients = medecin.patients.all()
+         serializer = AllPatientSerializer(patients, many=True)  # Sérialiser les patients
+
+         return Response (serializer.data)
+
+class GetNbCons (APIView):
+    def get(self, request , username):
+        medecin = Medecin.objects.get(Email = username)
+        consultations = Consultation.objects.filter(
+            Medecin_id = medecin.Medecin_ID,
+            Datecons = date.today().strftime('%Y-%m-%d')
+            )
+        personne1 = Patient.objects.get(DPI_ID = consultations[1].Patient_id)
+        personne2 = Patient.objects.get(DPI_ID = consultations[2].Patient_id)
+        print(personne1 , personne2)
+        
+        return Response ( {          
+                "count": consultations.count(),
+                "patient1" : {personne1.Nom +" "+ personne1.Prenom}  , 
+                "patient2" :{ personne2.Nom +" "+ personne2.Prenom} 
+                         })
+
+
+        

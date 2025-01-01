@@ -1,0 +1,13 @@
+.form-control {
+  @apply flex flex-col gap-y-1.5;
+}
+.form-control label {
+  @apply text-dark-gray text-xs font-medium;
+}
+.form-control input {
+  @apply bg-gray-50 text-gray-700 placeholder-gray-400
+         focus:bg-white focus:text-gray-900
+         rounded-md p-2 outline-none border border-gray-300
+         focus:border-primary-blue focus:ring-2 focus:ring-primary-blue
+         ring-offset-2 shadow-sm transition-all duration-300;
+}

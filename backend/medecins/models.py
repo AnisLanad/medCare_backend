@@ -1,6 +1,10 @@
 from django.db import models
 from patients.models import Patient
 from django.utils.timezone import now
+from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
 
 
 class Medecin(models.Model):
@@ -138,3 +142,46 @@ class Image(models.Model):
         def __str__(self):
           return f"{self.Titre} "
       
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = [
+        ('medecin', 'Medecin'),
+        ('patient', 'Patient'),
+    ]
+    
+    # Ajouter un champ 'role' pour différencier les utilisateurs
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    
+
+    # Remplacer 'username' par 'email' pour l'authentification
+    REQUIRED_FIELDS = [ 'role' ]  # Le champ 'role' sera requis lors de la création
+    
+    groups = models.ManyToManyField(
+        'auth.Group', related_name='customuser_groups', blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission', related_name='customuser_permissions', blank=True
+    )
+    def __str__(self):
+        return f"{self.email} ({self.role})"
+    
+@receiver(post_save, sender=Medecin)
+def create_user_for_medecin(sender, instance, created, **kwargs):
+    if created:  
+        user = CustomUser(
+            username=instance.Email,
+            role='medecin'
+        )
+        user.set_password(instance.MotDePasse)
+        user.save()
+        
+@receiver(post_save, sender=Patient)
+def create_user_for_medecin(sender, instance, created, **kwargs):
+    if created:  
+        user = CustomUser(
+            username=instance.Email,
+            role='patient'
+        )
+        user.set_password(instance.Telephone)
+        user.save()
+        

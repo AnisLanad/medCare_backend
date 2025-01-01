@@ -18,8 +18,8 @@ from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from medecins import views as medecins_views
 from patients import views as patiens_views
-
-
+from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
+from medecins.views import CustomTokenObtainPairView , GetNomPrenom , GetPatients , GetNbCons
 # Création du router pour l'API
 router = DefaultRouter()
 
@@ -49,8 +49,12 @@ router.register(r'images', medecins_views.ImageViewSet)
 urlpatterns = [
     # URL d'administration Django
     path('admin/', admin.site.urls),
-    
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/user/<str:username>/<str:role>/', GetNomPrenom.as_view() , name='nom-prenom'), 
     # URLs de l'API
+    path('api/medecin/<str:username>/patients/' , GetPatients.as_view() , name="patientMedecin" ),
+    path('api/medecin/<str:username>/nbcons/' ,GetNbCons.as_view() , name='nombre_consultations'),
     path('api/', include(router.urls)),
     
     # URLs d'authentification de l'API

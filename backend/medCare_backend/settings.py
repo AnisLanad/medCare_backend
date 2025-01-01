@@ -15,7 +15,7 @@ from decouple import config, RepositoryEnv
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-
+from datetime import timedelta
 # Charger le fichier .env
 load_dotenv()
 
@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'django_extensions', #Great packaged to access abstract models
     'django_filters', #Used with DRF
     'rest_framework', #DRF package
+    'rest_framework_simplejwt',
     'core', # New app
+    'corsheaders',
     'medecins',
     'patients',
     'administrateurs'
@@ -66,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -97,12 +100,12 @@ WSGI_APPLICATION = 'medCare_backend.wsgi.application'
 # Configuration de la base de données
 DATABASES = {
     'default': {
-        'ENGINE': config('ENGINE', default='django.db.backends.sqlite3'),
-        'NAME': config('NAME', default='db.sqlite3'),
-        'USER': config('USER', default=''),
-        'PASSWORD': config('PASSWORD', default=''),
-        'HOST': config('HOST', default=''),
-        'PORT': config('PORT', default=''),
+        'ENGINE': config('ENGINE', default='django.db.backends.mysql'),
+        'NAME': config('NAME', default='medcare_db'),
+        'USER': config('USER', default='root'),
+        'PASSWORD': config('PASSWORD', default='2608004'),
+        'HOST': config('HOST', default='localhost'),
+        'PORT': config('PORT', default='3306'),
         'TEST': {
             'MIRROR': 'default',  # Force les tests à utiliser la base principale
         },
@@ -151,13 +154,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework_json_api.parsers.JSONParser',
+        'rest_framework.parsers.JSONParser',
+
     ),
     'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
         'rest_framework_json_api.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
@@ -172,5 +180,10 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
 }
+
+AUTH_USER_MODEL = 'medecins.CustomUser'
