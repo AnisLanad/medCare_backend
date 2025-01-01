@@ -96,18 +96,15 @@ WSGI_APPLICATION = 'medCare_backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 # Configuration de la base de données
 DATABASES = {
-    'default': {
-        'ENGINE': config('ENGINE', default='django.db.backends.sqlite3'),
-        'NAME': config('NAME', default='db.sqlite3'),
-        'USER': config('USER', default=''),
-        'PASSWORD': config('PASSWORD', default=''),
-        'HOST': config('HOST', default=''),
-        'PORT': config('PORT', default=''),
-        'TEST': {
-            'MIRROR': 'default',  # Force les tests à utiliser la base principale
-        },
-    }
-}
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'medCare_db',  # Your database name
+                'USER': 'root',  # Your MySQL username
+                'PASSWORD': 'hichem123',  # Your MySQL password
+                'HOST': 'localhost',
+                'PORT': '3306',
+            }
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

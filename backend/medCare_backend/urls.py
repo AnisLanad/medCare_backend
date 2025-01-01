@@ -18,10 +18,18 @@ from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from medecins import views as medecins_views
 from patients import views as patiens_views
+from administrateurs import views as admin_views
 
 
 # Création du router pour l'API
 router = DefaultRouter()
+
+#Routes pour l'administrateurs
+router.register(r'admin/medecins',admin_views.MedecinViewSet)
+router.register(r'admin/patients',admin_views.PatientViewSet)
+router.register(r'admin/infirmiers',admin_views.InfirmierViewSet)
+router.register(r'admin/laborantins',admin_views.LaborantinViewSet)
+router.register(r'admin/all',admin_views.AllHealthcareWorkersViewSet,basename='healthcare-workers')
 
 # Routes pour les professionnels de santé
 router.register(r'medecins', medecins_views.MedecinViewSet)
