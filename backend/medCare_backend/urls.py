@@ -20,8 +20,17 @@ from medecins import views as medecins_views
 from patients import views as patiens_views
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from medecins.views import CustomTokenObtainPairView , GetNomPrenom , GetPatients , GetNbCons
+from administrateurs import views as admin_views
+
 # Création du router pour l'API
 router = DefaultRouter()
+
+#Routes pour l'administrateurs
+router.register(r'admin/medecins',admin_views.MedecinViewSet)
+router.register(r'admin/patients',admin_views.PatientViewSet)
+router.register(r'admin/infirmiers',admin_views.InfirmierViewSet)
+router.register(r'admin/laborantins',admin_views.LaborantinViewSet)
+router.register(r'admin/all',admin_views.AllHealthcareWorkersViewSet,basename='healthcare-workers')
 
 # Routes pour les professionnels de santé
 router.register(r'medecins', medecins_views.MedecinViewSet)

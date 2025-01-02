@@ -108,7 +108,7 @@ DATABASES = {
         'PORT': config('PORT', default='3306'),
         'TEST': {
             'MIRROR': 'default',  # Force les tests à utiliser la base principale
-        },
+        }
     }
 }
 
