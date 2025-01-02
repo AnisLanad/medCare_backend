@@ -2,7 +2,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Patient } from '../../models/patient.interface';
+import { Patient } from '../modals/patient.interface';
 
 @Component({
   selector: 'app-add-patient',
