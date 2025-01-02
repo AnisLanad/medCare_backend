@@ -1,6 +1,19 @@
-<div>
-  <!-- container -->
-  <div class="2xl:container 2xl:mx-auto">
-    <router-outlet></router-outlet>
-  </div>
+<div class="flex min-h-screen bg-gray-50">
+<!--   Sidebar -->
+    <app-sidebar></app-sidebar>
+<!--   Main Content -->
+    <div class="flex-1 ml-[250px]">
+      <!-- Header -->
+      <app-dashboard-header></app-dashboard-header>
+<!---->
+      <!-- Page Content -->
+      <div class="p-6">
+        <app-search-header></app-search-header>
+<!---->
+        <!-- Table Section -->
+        <div class="mt-6 bg-white rounded-lg shadow">
+          <app-patient-list></app-patient-list>
+        </div>
+      </div>
+    </div>
 </div>
