@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
 export const routes: Routes = [
   {
     path: '',
@@ -16,7 +15,6 @@ export const routes: Routes = [
         (m) => m.LoginComponent
       ),
     title: 'Login',
-    
   },
   {
     path: '',

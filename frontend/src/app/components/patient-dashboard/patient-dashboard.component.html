@@ -1,0 +1,189 @@
+<div class="min-h-screen bg-gray-50">
+  <header
+    class="w-full items-center bg-white px-6 pt-2.5 pb-3 shadow-sm flex justify-end"
+  >
+    <div class="flex items-center space-x-6 h-10">
+      <!-- Notifications Icon -->
+      <button
+        class="relative p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+        aria-label="Notifications"
+      >
+        <i class="fa-solid fa-bell text-gray-600 text-lg"></i>
+        <span
+          class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold"
+        >
+          3
+        </span>
+      </button>
+
+      <!-- User Profile -->
+      <div class="relative">
+        <button
+          class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+          (click)="toggleDropdown()"
+        >
+          <img
+            src="/images/logo.svg"
+            alt="User Profile"
+            class="h-8 w-8 rounded-full"
+          />
+          <span class="hidden md:inline-block font-medium text-gray-700">
+            Mr Ahcen chabbi
+          </span>
+          <i
+            class="fa-solid fa-chevron-down text-gray-600 transition-transform duration-200"
+            [ngClass]="{ 'rotate-180': isDropdownOpen }"
+          ></i>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          [@dropdown]="isDropdownOpen"
+          *ngIf="isDropdownOpen"
+          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+        >
+          <a
+            href="/profile"
+            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+            >Profile</a
+          >
+          <a
+            href="/settings"
+            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+            >Settings</a
+          >
+          <button
+            class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="p-6 space-y-6">
+    <div
+      class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-lg shadow-lg p-6"
+    >
+      <div>
+        <h1 class="text-2xl font-bold">Welcome, Mr Ahcen 👋</h1>
+        <p class="text-gray-600">We hope you have a good day.</p>
+      </div>
+      <img
+        src="/images/logo.svg"
+        alt="Doctor Avatar"
+        class="w-16 h-16 rounded-full shadow-md"
+      />
+    </div>
+    <main
+      class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+    >
+      <!-- Medical Record -->
+      <div
+        class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105"
+      >
+        <div class="flex items-center mb-4">
+          <div class="bg-blue-100 text-blue-600 p-4 rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c1.657 0 3 1.343 3 3s-1.343 3-3 3m0 0a2.983 2.983 0 01-2.121-.879m2.121.879c.825-.825 1.21-1.815 1.21-2.879s-.385-2.054-1.21-2.879m-1.21 2.879a2.983 2.983 0 01-.879-2.121m.879 2.121L4 20m0 0H4m0 0H2"
+              />
+            </svg>
+          </div>
+          <h2 class="ml-4 text-lg font-semibold text-gray-800">
+            Medical Record
+          </h2>
+        </div>
+        <p class="text-gray-600 mb-4">
+          Access your up-to-date medical information.
+        </p>
+        <button
+          (click)="openMedicalRecordModal()"
+          class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        >
+          View Record
+        </button>
+      </div>
+
+      <!-- Medical Certificate -->
+      <div
+        class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105"
+      >
+        <div class="flex items-center mb-4">
+          <div class="bg-green-100 text-green-600 p-4 rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7M5 7h14"
+              />
+            </svg>
+          </div>
+          <h2 class="ml-4 text-lg font-semibold text-gray-800">
+            Medical Certificate
+          </h2>
+        </div>
+        <p class="text-gray-600 mb-4">
+          Request a certificate to justify an absence.
+        </p>
+        <button
+          class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+        >
+          Request Certificate
+        </button>
+      </div>
+
+      <!-- Billing Statement -->
+      <div
+        class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105"
+      >
+        <div class="flex items-center mb-4">
+          <div class="bg-purple-100 text-purple-600 p-4 rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 9V7a4 4 0 10-8 0v2m0 0v1m8-1v1m0 4h.01M12 15h.01M8 15h.01m-1 2h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+          <h2 class="ml-4 text-lg font-semibold text-gray-800">
+            Billing Statement
+          </h2>
+        </div>
+        <p class="text-gray-600 mb-4">
+          Get a summary of your hospitalization costs.
+        </p>
+        <button
+          class="w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700"
+        >
+          Download Statement
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+<app-medical-record-modal></app-medical-record-modal>
