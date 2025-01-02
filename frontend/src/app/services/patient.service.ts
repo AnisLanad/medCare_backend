@@ -22,7 +22,7 @@ export class PatientService {
       Prenom: string;
       DateNaissance: string;
       NSS: string;
-    }>>(`${this.apiUrl}/patients/`)
+    }>>(`${this.apiUrl}/admin/patients/`)
       .pipe(
         map(apiPatients => apiPatients.map(p => this.mapApiToPatient(p)))
       )
