@@ -5,11 +5,12 @@ import { SearchHeaderComponent } from './components/Header-dashboard/SearchHeade
 import {DashboardHeaderComponent} from './components/Header-dashboard/header.component';
 import {SidebarComponent} from './components/left-bar/left-bar.component';
 import {TestResultsComponent} from './components/stats/stats.component';
+import {DoctorListComponent} from './components/patient-list/doctor-list.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
-  imports: [CommonModule, PatientListComponent, SearchHeaderComponent, DashboardHeaderComponent, SidebarComponent, TestResultsComponent]
+  imports: [CommonModule, PatientListComponent, SearchHeaderComponent, DashboardHeaderComponent, SidebarComponent, TestResultsComponent, DoctorListComponent]
 })
 export class AppComponent {
   patients = [
