@@ -1,90 +1,59 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Doctor } from '../../services/doctor.service';
+import {ModifyDoctorComponent} from '../modify-patient/modify-doctor.component';
 
 @Component({
   selector: 'app-doctor-row',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ModifyDoctorComponent, ModifyDoctorComponent],
   template: `
-    <div class="row-container">
-      <div class="cell id">{{ doctor.id }}</div>
-      <div class="cell name">{{ doctor.name.first }} {{ doctor.name.last }}</div>
-      <div class="cell">{{ doctor.specialtyDisplay }}</div>
-      <div class="cell">{{ doctor.phoneNumber }}</div>
-      <div class="cell">{{ doctor.email }}</div>
-      <div class="cell">{{ doctor.patients?.length || 0 }}</div>
-      <div class="cell actions">
-        <button class="edit-btn" (click)="edit()">Edit</button>
-        <button class="delete-btn" (click)="delete()">Delete</button>
+    <div class="grid grid-cols-[60px_120px_1fr_1fr_1fr_100px_100px] gap-4 items-center p-3 border-b border-gray-300 hover:bg-gray-100">
+      <div class="truncate font-medium">{{doctor.id}}</div>
+      <div class="truncate font-medium">{{doctor.name.last}}</div>
+      <div class="truncate">{{doctor.specialtyDisplay}}</div>
+      <div class="truncate">{{doctor.phoneNumber}}</div>
+      <div class="truncate">{{doctor.email}}</div>
+      <div class="truncate text-center">{{doctor.patients?.length || 0}}</div>
+      <div class="flex gap-2 justify-center">
+        <button
+          class="p-2 rounded transition bg-green-200 hover:bg-green-300"
+          (click)="openEditPopup()">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button
+          class="p-2 rounded transition bg-red-200 hover:bg-red-300"
+          (click)="onDelete.emit(doctor.id ? +doctor.id : undefined)">
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
     </div>
+
+    <app-modify-doctor
+      [doctor]="doctor"
+      [isVisible]="isEditPopupVisible"
+      (close)="closeEditPopup()"
+      (save)="saveDoctor($event)"
+    ></app-modify-doctor>
   `,
-  styles: [`
-    .row-container {
-      display: grid;
-      grid-template-columns: 60px 120px 1fr 1fr 1fr 100px 100px;
-      gap: 16px;
-      padding: 12px;
-      border-bottom: 1px solid #e9ecef;
-      align-items: center;
-      transition: background-color 0.2s;
-    }
-
-    .row-container:hover {
-      background-color: #f8f9fa;
-    }
-
-    .cell {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-    }
-
-    button {
-      padding: 4px 8px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: background-color 0.2s;
-    }
-
-    .edit-btn {
-      background-color: #0d6efd;
-      color: white;
-    }
-
-    .edit-btn:hover {
-      background-color: #0b5ed7;
-    }
-
-    .delete-btn {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    .delete-btn:hover {
-      background-color: #bb2d3b;
-    }
-  `]
 })
 export class DoctorRowComponent {
   @Input() doctor!: Doctor;
   @Output() onEdit = new EventEmitter<Doctor>();
   @Output() onDelete = new EventEmitter<number>();
 
-  edit(): void {
-    this.onEdit.emit(this.doctor);
+  isEditPopupVisible = false;
+
+  openEditPopup() {
+    this.isEditPopupVisible = true;
   }
 
-  delete(): void {
-    this.onDelete.emit(this.doctor.id);
+  closeEditPopup() {
+    this.isEditPopupVisible = false;
+  }
+
+  saveDoctor(updatedDoctor: Doctor) {
+    this.onEdit.emit(updatedDoctor);
+    this.closeEditPopup();
   }
 }

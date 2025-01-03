@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, catchError, map, throwError, of, tap } fro
 
 // Define the Doctor interface
 export interface Doctor {
-  id: number;
+  id: number | null;
   name: {
     first: string;
     last: string;
