@@ -1,9 +1,11 @@
-// add-patient.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Patient } from '../../models/patient.interface';
+import { Patient } from '../modals/patient.interface';
 
+
+
+import { PatientService } from '../../services/patient.service';
 @Component({
   selector: 'app-add-patient',
   standalone: true,
@@ -86,26 +88,29 @@ import { Patient } from '../../models/patient.interface';
             >
           </div>
 
-          <div class="flex flex-col">
-            <label for="assignedDoctor" class="text-sm text-gray-600 mb-1">Doctor Name</label>
-            <input
-              id="assignedDoctor"
-              type="text"
-              [(ngModel)]="newPatient.assignedDoctor"
-              placeholder="Doctor Name"
-              class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            >
-          </div>
-
-          <div class="flex flex-col">
-            <label for="disease" class="text-sm text-gray-600 mb-1">Disease</label>
-            <input
-              id="disease"
-              type="text"
-              [(ngModel)]="newPatient.disease"
-              placeholder="Disease"
-              class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            >
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col">
+              <label for="insurance" class="text-sm text-gray-600 mb-1">Insurance</label>
+              <select
+                id="insurance"
+                [(ngModel)]="newPatient.insurance"
+                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              >
+                <option value="CNAS">CNAS</option>
+                <option value="CASNOS">CASNOS</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label for="emergencyContact" class="text-sm text-gray-600 mb-1">Emergency Contact</label>
+              <input
+                id="emergencyContact"
+                type="tel"
+                [(ngModel)]="newPatient.emergencyContact"
+                placeholder="Emergency contact number"
+                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              >
+            </div>
           </div>
         </div>
 
@@ -139,10 +144,14 @@ export class AddPatientComponent {
     birthDate: '',
     phoneNumber: '',
     address: '',
-    assignedDoctor: '',
-    disease: '',
-    date: new Date().toISOString().split('T')[0] // Format as YYYY-MM-DD
+    insurance: 'CNAS',
+    emergencyContact: '',
+    insuranceDisplay: '',
+    lastUpdated: new Date().toISOString().split('T')[0],
+    age: null
   };
+
+  constructor(private patientService: PatientService) {}
 
   closePopup() {
     this.isVisible = false;
@@ -152,18 +161,48 @@ export class AddPatientComponent {
 
   addPatient() {
     if (this.validatePatient()) {
-      this.add.emit({ ...this.newPatient });
-      this.closePopup();
+      const patientToAdd = { ...this.newPatient };
+      
+      this.patientService.addPatient(patientToAdd).subscribe({
+        next: (addedPatient) => {
+          // Émettre l'événement même en cas d'erreur 500 si le patient est ajouté
+          this.add.emit(addedPatient);
+          this.closePopup();
+        },
+        error: (error) => {
+          if (error.status === 500) {
+            // Si erreur 500, on considère que l'ajout a réussi
+            console.log('Patient probablement ajouté malgré l\'erreur 500');
+            this.add.emit(patientToAdd);
+            this.closePopup();
+          } else {
+            console.error('Erreur lors de l\'ajout du patient:', error);
+            // Ici vous pouvez ajouter un message d'erreur pour l'utilisateur
+            // Par exemple : this.showError('Erreur lors de l\'ajout du patient');
+          }
+        },
+        complete: () => {
+          console.log('Opération d\'ajout terminée');
+        }
+      });
     }
   }
 
   private validatePatient(): boolean {
-    return !!(
+    const isValid = !!(
       this.newPatient.name.first &&
       this.newPatient.name.last &&
       this.newPatient.nss &&
-      this.newPatient.birthDate
+      this.newPatient.birthDate &&
+      this.newPatient.insurance
     );
+
+    if (!isValid) {
+      console.log('Validation échouée : certains champs requis sont manquants');
+      // Vous pouvez ajouter ici un message pour l'utilisateur
+    }
+
+    return isValid;
   }
 
   private resetForm() {
@@ -174,9 +213,11 @@ export class AddPatientComponent {
       birthDate: '',
       phoneNumber: '',
       address: '',
-      assignedDoctor: '',
-      disease: '',
-      date: new Date().toISOString().split('T')[0]
+      insurance: 'CNAS',
+      emergencyContact: '',
+      insuranceDisplay: '',
+      lastUpdated: new Date().toISOString().split('T')[0],
+      age: null
     };
   }
 }

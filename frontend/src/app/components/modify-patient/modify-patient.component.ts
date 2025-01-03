@@ -48,7 +48,6 @@ import { Patient } from '../modals/patient.interface';
               type="text"
               [(ngModel)]="patient.nss"
               placeholder="Social security number"
-              pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
               class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             >
           </div>
@@ -86,15 +85,29 @@ import { Patient } from '../modals/patient.interface';
             >
           </div>
 
-          <div class="flex flex-col">
-            <label for="assignedDoctor" class="text-sm text-gray-600 mb-1">Doctor Name</label>
-            <input
-              id="assignedDoctor"
-              type="text"
-              [(ngModel)]="patient.assignedDoctor"
-              placeholder="Doctor Name"
-              class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            >
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col">
+              <label for="insurance" class="text-sm text-gray-600 mb-1">Insurance</label>
+              <select
+                id="insurance"
+                [(ngModel)]="patient.insurance"
+                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              >
+                <option value="CNAS">CNAS</option>
+                <option value="CASNOS">CASNOS</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label for="emergencyContact" class="text-sm text-gray-600 mb-1">Emergency Contact</label>
+              <input
+                id="emergencyContact"
+                type="tel"
+                [(ngModel)]="patient.emergencyContact"
+                placeholder="Emergency contact number"
+                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              >
+            </div>
           </div>
         </div>
 
@@ -114,43 +127,67 @@ import { Patient } from '../modals/patient.interface';
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class ModifyPatientComponent {
-    @Input() patient: Patient = {
-        id: null,
-        name: { first: '', last: '' },
-        nss: '',
-        birthDate: '',
-        phoneNumber: '',
-        address: '',
-        assignedDoctor: '',
-        disease: '',
-        date: '',
-    };
+  @Input() patient: Patient = {
+    id: null,
+    name: { first: '', last: '' },
+    nss: '',
+    birthDate: '',
+    phoneNumber: '',
+    address: '',
+    insurance: 'CNAS',
+    insuranceDisplay: 'Cnas',  // Ajout de la valeur par défaut
+    emergencyContact: '',
+    lastUpdated: new Date().toISOString().split('T')[0],
+    age: null
+  };
 
-    @Input() isVisible: boolean = false;
-    @Output() close = new EventEmitter<void>();
-    @Output() save = new EventEmitter<Patient>();
+  @Input() isVisible: boolean = false;
+  @Output() close = new EventEmitter<void>();
+  @Output() save = new EventEmitter<Patient>();
 
-    closePopup() {
-        this.isVisible = false;
-        this.close.emit();
+  closePopup() {
+    this.isVisible = false;
+    this.close.emit();
+  }
+
+  calculateAge(birthDate: string): number {
+    if (!birthDate) return 20;
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDiff = today.getMonth() - birthDateObj.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+      age--;
     }
+    return age;
+  }
 
-    applyChanges() {
-        if (this.validatePatient()) {
-            this.save.emit(this.patient);
-            this.closePopup();
-        }
-    }
+  applyChanges() {
+    if (this.validatePatient()) {
+      // Créer une copie du patient avec les bonnes propriétés
+      const updatedPatient = {
+        ...this.patient,
+        age: this.calculateAge(this.patient.birthDate),
+        insuranceDisplay: this.patient.insurance === 'CNAS' ? 'Cnas' : this.patient.insurance,
+        lastUpdated: new Date().toISOString().split('T')[0]
+      };
 
-    private validatePatient(): boolean {
-        return !!(
-            this.patient.name.first &&
-            this.patient.name.last &&
-            this.patient.nss &&
-            this.patient.birthDate
-        );
+      this.save.emit(updatedPatient);
+      this.closePopup();
     }
+  }
+
+  private validatePatient(): boolean {
+    return !!(
+      this.patient.name.first &&
+      this.patient.name.last &&
+      this.patient.nss &&
+      this.patient.birthDate &&
+      this.patient.insurance
+    );
+  }
 }

@@ -95,15 +95,28 @@ export class PatientListComponent implements OnInit {
     this.patientService.updatePatient(patient).subscribe({
       next: (updatedPatient) => {
         console.log('Patient updated successfully:', updatedPatient);
-        // Optional: Add success message or notification
+        // this.showSuccessMessage('Patient mis à jour avec succès');
       },
       error: (error) => {
-        console.error('Error updating patient:', error);
-        // Here you could add error handling, like showing an error message
+        if (error.message.includes('Version conflict')) {
+          console.warn('Conflict detected:', error);
+          // this.showWarningMessage('Les données ont changé. La page va être rafraîchie avec les dernières données.');
+          setTimeout(() => {
+            // Recharger le composant ou rafraîchir les données
+            this.loadCurrentData();
+          }, 2000); // Délai pour que l'utilisateur puisse lire le message
+        } else {
+          console.error('Error updating patient:', error);
+          // this.showErrorMessage('Erreur lors de la mise à jour du patient');
+        }
       }
     });
-  }
+}
 
+private loadCurrentData() {
+    // Méthode pour recharger les données actuelles
+    // À implémenter selon votre logique d'application
+}
   handleDelete(id: number): void {
     this.patientService.deletePatient(id).subscribe({
       next: () => {

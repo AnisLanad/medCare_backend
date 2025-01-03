@@ -1,5 +1,5 @@
 export interface Patient {
-  id: number | null; // Use `null` for new patients
+  id: number | null;
   name: {
     first: string;
     last: string;
@@ -8,7 +8,9 @@ export interface Patient {
   birthDate: string;
   phoneNumber: string;
   address: string;
-  assignedDoctor: string;
-  disease: string;
-  date: string;
+  insurance: string;
+  emergencyContact: string;
+  insuranceDisplay: string;
+  lastUpdated: string;
+  age: number | null;
 }
