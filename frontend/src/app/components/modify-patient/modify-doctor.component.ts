@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Doctor } from '../../services/doctor.service';
@@ -106,15 +106,20 @@ export class ModifyDoctorComponent {
 
   editedDoctor!: Doctor;
 
-  ngOnInit() {
-    this.editedDoctor = {
-      ...this.doctor,
-      name: { ...this.doctor.name }
-    };
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['doctor'] && this.doctor) {
+      this.editedDoctor = {
+        ...this.doctor,
+        name: { ...this.doctor.name },
+        patients: this.doctor.patients || [], // Keep existing patients
+        password: 'unchanged'
+      };
+    }
   }
 
   onSubmit() {
-    // Update specialty display based on selected specialty
+    console.log('Original doctor data:', this.editedDoctor);
+
     const specialtyMap: { [key: string]: string } = {
       'GEN': 'Médecin généraliste',
       'CARD': 'Cardiologue',
@@ -122,8 +127,15 @@ export class ModifyDoctorComponent {
       'PEDI': 'Pédiatre'
     };
 
-    this.editedDoctor.specialtyDisplay = specialtyMap[this.editedDoctor.specialty] || this.editedDoctor.specialty;
+    const updatedDoctor = {
+      ...this.editedDoctor,
+      specialtyDisplay: specialtyMap[this.editedDoctor.specialty] || this.editedDoctor.specialty,
+      password: this.editedDoctor.password || 'unchanged',
+      patients: this.editedDoctor.patients || [] // Preserve existing patients
+    };
 
-    this.save.emit(this.editedDoctor);
+    console.log('Final doctor data:', updatedDoctor);
+    
+    this.save.emit(updatedDoctor);
   }
 }

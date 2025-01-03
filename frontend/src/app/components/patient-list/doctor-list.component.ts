@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DoctorService, Doctor } from '../../services/doctor.service';
 import { HttpClientModule } from '@angular/common/http';
-import {DoctorRowComponent} from '../patient-row/doctor-row.component';
+import { DoctorRowComponent } from '../patient-row/doctor-row.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-doctor-list',
@@ -35,7 +36,6 @@ import {DoctorRowComponent} from '../patient-row/doctor-row.component';
       overflow: hidden;
       font-family: 'Poppins', sans-serif;
     }
-
     .header-row {
       display: grid;
       grid-template-columns: 60px 120px 1fr 1fr 1fr 100px 100px;
@@ -48,7 +48,6 @@ import {DoctorRowComponent} from '../patient-row/doctor-row.component';
       font-size: 14px;
       line-height: 23.8px;
     }
-
     .header-cell {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -58,11 +57,9 @@ import {DoctorRowComponent} from '../patient-row/doctor-row.component';
       color: #212529;
       line-height: 24px;
     }
-
     .actions {
       text-align: center;
     }
-
     app-doctor-row .row-container {
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
@@ -72,65 +69,74 @@ import {DoctorRowComponent} from '../patient-row/doctor-row.component';
     }
   `]
 })
-export class DoctorListComponent implements OnInit {
+export class DoctorListComponent implements OnInit, OnDestroy {
   doctors: Doctor[] = [];
+  private doctorsSubscription: Subscription | null = null;
 
   constructor(private doctorService: DoctorService) {}
 
   ngOnInit(): void {
-    this.doctorService.getDoctors().subscribe({
+    this.doctorsSubscription = this.doctorService.getDoctors().subscribe({
       next: (doctors) => {
-        this.doctors = doctors;
+        console.log('Received updated doctors list:', doctors);
+        this.doctors = [...doctors]; // Create a new array reference
       },
       error: (error) => {
-        console.error('Error fetching doctors:', error);
-        // Here you could add error handling, like showing a notification
+        console.error('Error in doctors subscription:', error);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription when component is destroyed
+    if (this.doctorsSubscription) {
+      this.doctorsSubscription.unsubscribe();
+    }
   }
 
   handleEdit(doctor: Doctor): void {
+    if (!doctor || !doctor.id) {
+      console.error('Invalid doctor data');
+      return;
+    }
+  
     this.doctorService.updateDoctor(doctor).subscribe({
       next: (updatedDoctor) => {
         console.log('Doctor updated successfully:', updatedDoctor);
-        // this.showSuccessMessage('Doctor updated successfully');
+        // No need to call loadDoctors() here, as the BehaviorSubject will automatically update the UI
       },
       error: (error) => {
-        if (error.message.includes('Version conflict')) {
-          console.warn('Conflict detected:', error);
-          // this.showWarningMessage('Data has changed. Page will refresh with latest data.');
-          setTimeout(() => {
-            this.loadCurrentData();
-          }, 2000);
-        } else {
-          console.error('Error updating doctor:', error);
-          // this.showErrorMessage('Error updating doctor');
-        }
+        console.error('Error updating doctor:', error);
       }
     });
   }
 
-  private loadCurrentData() {
-    // Implement your data refresh logic here
+  loadDoctors(): void {
     this.doctorService.getDoctors().subscribe({
       next: (doctors) => {
-        this.doctors = doctors;
+        console.log('Received updated doctors list:', doctors);
+        this.doctors = [...doctors];
       },
       error: (error) => {
-        console.error('Error refreshing doctors:', error);
+        console.error('Error loading doctors:', error);
       }
     });
   }
-
+  
   handleDelete(id: number): void {
+    if (!id) {
+      console.error('Invalid doctor ID');
+      return;
+    }
+
     this.doctorService.deleteDoctor(id).subscribe({
       next: () => {
         console.log('Doctor deleted successfully');
-        // Optional: Add success message or notification
+        // No need to manually update the doctors array
+        // The subscription will handle the update automatically
       },
       error: (error) => {
         console.error('Error deleting doctor:', error);
-        // Here you could add error handling, like showing an error message
       }
     });
   }

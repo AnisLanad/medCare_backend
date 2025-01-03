@@ -124,7 +124,7 @@ export class AddDoctorComponent {
     phoneNumber: '',
     email: '',
     password: '',
-    patients: []
+    patients: [] // Empty array of patient IDs
   };
 
   private specialtyMap: { [key: string]: string } = {
@@ -144,47 +144,67 @@ export class AddDoctorComponent {
     this.resetForm();
   }
 
+  private validateEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  private validateDoctor(): boolean {
+    // Check for required fields
+    if (!this.newDoctor.name.first || !this.newDoctor.name.last || 
+        !this.newDoctor.specialty || !this.newDoctor.email || 
+        !this.newDoctor.password || !this.newDoctor.phoneNumber) {
+      console.log('Validation failed: required fields are missing');
+      alert('Please fill in all required fields');
+      return false;
+    }
+
+    // Validate email format
+    if (!this.validateEmail(this.newDoctor.email)) {
+      console.log('Validation failed: invalid email format');
+      alert('Please enter a valid email address');
+      return false;
+    }
+
+    // Validate phone number (optional, adjust regex as needed)
+    const phoneRegex = /^\d{8,}$/;  // At least 8 digits
+    if (!phoneRegex.test(this.newDoctor.phoneNumber.replace(/\D/g, ''))) {
+      console.log('Validation failed: invalid phone number');
+      alert('Please enter a valid phone number');
+      return false;
+    }
+
+    return true;
+  }
+
   addDoctor() {
     if (this.validateDoctor()) {
-      // Set the specialty display based on the selected specialty
       this.newDoctor.specialtyDisplay = this.specialtyMap[this.newDoctor.specialty];
-      const doctorToAdd = { ...this.newDoctor };
-
+  
+      // Ensure password is provided
+      if (!this.newDoctor.password) {
+        this.newDoctor.password = 'password'; // Replace with actual password input
+      }
+  
+      const doctorToAdd = {
+        ...this.newDoctor,
+        patients: []  // Empty array instead of [1]
+      };
+  
+      console.log('Submitting doctor:', doctorToAdd);
+  
       this.doctorService.addDoctor(doctorToAdd).subscribe({
         next: (addedDoctor) => {
+          console.log('Doctor added successfully:', addedDoctor);
           this.add.emit(addedDoctor);
           this.closePopup();
         },
         error: (error) => {
-          if (error.status === 500) {
-            console.log('Doctor probably added despite 500 error');
-            this.add.emit(doctorToAdd);
-            this.closePopup();
-          } else {
-            console.error('Error adding doctor:', error);
-          }
-        },
-        complete: () => {
-          console.log('Add operation completed');
+          console.error('Error adding doctor:', error.error);
+          alert('Failed to add doctor. Please check the input values.');
         }
       });
     }
-  }
-
-  private validateDoctor(): boolean {
-    const isValid = !!(
-      this.newDoctor.name.first &&
-      this.newDoctor.name.last &&
-      this.newDoctor.specialty &&
-      this.newDoctor.email &&
-      this.newDoctor.password
-    );
-
-    if (!isValid) {
-      console.log('Validation failed: required fields are missing');
-    }
-
-    return isValid;
   }
 
   private resetForm() {
@@ -196,7 +216,7 @@ export class AddDoctorComponent {
       phoneNumber: '',
       email: '',
       password: '',
-      patients: []
+      patients: []  // Empty array instead of [1]
     };
   }
 }

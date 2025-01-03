@@ -107,7 +107,7 @@ DATABASES = {
         'ENGINE': config('ENGINE', default='django.db.backends.mysql'),
         'NAME': config('NAME', default='medcare_db'),
         'USER': config('USER', default='root'),
-        'PASSWORD': config('PASSWORD', default='2608004'),
+        'PASSWORD': 'islem',
         'HOST': config('HOST', default='localhost'),
         'PORT': config('PORT', default='3306'),
         'TEST': {
