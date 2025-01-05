@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  standalone: true
 })
 export class AppComponent {
   title = 'frontend';

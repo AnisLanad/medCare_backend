@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 export const routes: Routes = [
   {
     path: '',
@@ -55,6 +56,58 @@ export const routes: Routes = [
       import('./components/patient-dashboard/patient-dashboard.component').then(
         (m) => m.PatientDashboardComponent
       ),
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./components/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
+    children: [
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./components/dashboard-home/dashbaord-home').then(
+            (m) => m.DashboardHomeComponent
+          ),
+        title: 'Home',
+      },
+      {
+        path: 'patient',
+        loadComponent: () =>
+          import('./components/patient-dash/patient-dash.component').then(
+            (m) => m.PatientComponent
+          ),
+        title: 'Patient',
+      },
+      {
+        path: 'doctor',
+        loadComponent: () =>
+          import('./components/doctor/doctor.component').then(
+            (m) => m.DoctorComponent
+          ),
+        title: 'Doctor',
+      },
+      {
+        path: 'lab',
+        loadComponent: () =>
+          import('./components/lab/lab.component').then((m) => m.LabComponent),
+        title: 'Lab',
+      },
+      {
+        path: 'nurse',
+        loadComponent: () =>
+          import('./components/nurse/nurse.component').then(
+            (m) => m.NurseComponent
+          ),
+        title: 'Nurse',
+      },
+    ],
   },
   // 404
   {

@@ -8,6 +8,7 @@ import { Link } from '../../types/link.type';
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
+  standalone: true
 })
 export class SidebarComponent {
   isOpen = signal(false);
