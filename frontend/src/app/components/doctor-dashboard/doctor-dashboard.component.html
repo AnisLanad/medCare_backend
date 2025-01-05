@@ -1,0 +1,13 @@
+<div class="flex">
+  <app-sidebar [links]="links"></app-sidebar>
+  <div class="flex-1 bg-gray-50 min-h-screen">
+    <div class="flex flex-col flex-1 h-full">
+      <app-doctor-navbar></app-doctor-navbar>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<app-patient-modal></app-patient-modal>
+<app-add-prescription-modal></app-add-prescription-modal>
+<app-add-assessment-modal></app-add-assessment-modal>
+<app-add-summary-modal></app-add-summary-modal>

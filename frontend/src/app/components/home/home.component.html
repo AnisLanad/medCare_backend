@@ -1,0 +1,87 @@
+<div class="p-6 h-full w-full max-w-4xl mx-auto">
+  <!-- Welcome Section -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold">Welcome, Dr.  {{ nomPrenom?.Nom }}        👋</h1>
+      <p class="text-gray-600">Here's a quick overview of your day.</p>
+    </div>
+    <img
+      src="/images/logo.svg"
+      alt="Doctor Avatar"
+      class="w-16 h-16 rounded-full shadow-md"
+    />
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+    <!-- NSS Card -->
+    <div
+      (click)="openSearchByNssModal()"
+      class="bg-blue-100 p-4 rounded shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+    >
+      <div
+        class="flex flex-col sm:flex-row text-center sm:text-left items-center gap-3"
+      >
+        <i class="fas fa-search text-blue-600 text-2xl"></i>
+        <div>
+          <h2 class="font-semibold text-lg">Search by NSS</h2>
+          <p class="text-sm text-gray-600">
+            Find a patient by their social security number.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Card -->
+    <div
+      class="bg-green-100 p-4 rounded shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+      (click)="openSearchByQrCodeModal()"
+    >
+      <div
+        class="flex flex-col sm:flex-row text-center sm:text-left items-center gap-3"
+      >
+        <i class="fas fa-qrcode text-green-600 text-2xl"></i>
+        <div>
+          <h2 class="font-semibold text-lg">Search by QR Code</h2>
+          <p class="text-sm text-gray-600">
+            Scan a QR code to access patient data.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Overview -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-xl font-bold">{{this.nombre_cons}}</h3>
+      <p class="text-gray-600">Patients Today</p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-xl font-bold">{{this.nombre_cons}}</h3>
+      <p class="text-gray-600">Appointments</p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-xl font-bold">2</h3>
+      <p class="text-gray-600">Pending Approvals</p>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="bg-white p-4 rounded shadow-md mt-6">
+    <h2 class="font-semibold text-lg mb-2">Upcoming Appointments</h2>
+    <ul class="space-y-2">
+      <li class="flex justify-between items-center">
+        <span>{{this.pat1}} -   {{this.today}}</span>
+        <span class="text-gray-500 text-sm">Room 102</span>
+      </li>
+      <li class="flex justify-between items-center">
+        <span>{{this.pat2}} -   {{this.today}}</span>
+        <span class="text-gray-500 text-sm">Room 204</span>
+      </li>
+    </ul>
+  </div>
+
+  <app-search-by-nss-modal></app-search-by-nss-modal>
+  <app-search-by-qr-code-modal></app-search-by-qr-code-modal>
+</div>

@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from decouple import Config, RepositoryEnv
+from decouple import config, RepositoryEnv
 
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-
+from datetime import timedelta
 # Charger le fichier .env
 load_dotenv()
 
@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "clesecrete"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,7 +55,12 @@ INSTALLED_APPS = [
     'django_extensions', #Great packaged to access abstract models
     'django_filters', #Used with DRF
     'rest_framework', #DRF package
+    'rest_framework_simplejwt',
     'core', # New app
+    'corsheaders',
+    'medecins',
+    'patients',
+    'administrateurs'
 ]
 
 MIDDLEWARE = [
@@ -63,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -94,12 +100,15 @@ WSGI_APPLICATION = 'medCare_backend.wsgi.application'
 # Configuration de la base de données
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Moteur MySQL
-        'NAME': os.environ.get('DB_NAME', 'medCare_db'),  # Nom de la base de données
-        'USER': os.environ.get('DB_USER', 'admin'),  # Utilisateur MySQL
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),  # Mot de passe MySQL
-        'HOST': os.environ.get('DB_HOST', 'db'),  # Hôte de la base de données
-        'PORT': os.environ.get('DB_PORT', '3306'),  # Port MySQL
+        'ENGINE': config('ENGINE', default='django.db.backends.mysql'),
+        'NAME': config('NAME', default='medcare_db'),
+        'USER': config('USER', default='root'),
+        'PASSWORD': config('PASSWORD', default='hcen123456789'),
+        'HOST': config('HOST', default='localhost'),
+        'PORT': config('PORT', default='3306'),
+        'TEST': {
+            'MIRROR': 'default',  # Force les tests à utiliser la base principale
+        }
     }
 }
 
@@ -145,13 +154,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework_json_api.parsers.JSONParser',
+        'rest_framework.parsers.JSONParser',
+
     ),
     'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
         'rest_framework_json_api.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
@@ -166,5 +180,10 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
 }
+
+# AUTH_USER_MODEL = 'medecins.CustomUser'

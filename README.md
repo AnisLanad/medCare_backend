@@ -83,3 +83,19 @@ Before setting up the project, ensure that you have the following installed:
 
 
 
+
+
+
+**brouillant**
+
+class ConsultationSerializer(serializers.ModelSerializer):
+    Medecin = MedecinSerializer(read_only=True)  # Sérialisation du médecin lié
+    Patient = PatientSerializer(read_only=True)  # Sérialisation du patient lié (notez que ce champ doit être un seul patient, pas plusieurs)
+
+    class Meta:
+        model = Consultation
+        fields = ['Consultation_ID', 'Patient', 'Medecin', 'Motif', 'Diagnostic']
+
+Anis021538784888 password superuser
+
+

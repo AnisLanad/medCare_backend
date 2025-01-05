@@ -1,0 +1,28 @@
+<div class="p-6 h-full w-full max-w-6xl mx-auto">
+  <div class="p-6 bg-white shadow rounded-lg">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-blue-700">Patients</h1>
+      <div class="relative">
+        <input
+          type="text"
+          name="searchText"
+          [(ngModel)]="searchText"
+          (input)="filterPatients()"
+          placeholder="Search by name, ID, NSS"
+          class="w-72 px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+        />
+        <i
+          class="fa fa-search absolute w-5 h-5 text-gray-500 top-3 right-3"
+        ></i>
+      </div>
+    </div>
+
+    <app-dynamic-table
+      [columns]="patientsColumns"
+      [data]="filteredPatients"
+      [action]="action"
+      [pageSize]="3"
+    />
+  </div>
+</div>

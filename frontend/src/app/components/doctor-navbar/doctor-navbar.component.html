@@ -1,0 +1,61 @@
+<header
+  class="w-full items-center bg-white px-6 pt-2.5 pb-3 shadow-sm flex justify-end"
+>
+  <div class="flex items-center space-x-6 h-10">
+    <!-- Notifications Icon -->
+    <button
+      class="relative p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+      aria-label="Notifications"
+    >
+      <i class="fa-solid fa-bell text-gray-600 text-lg"></i>
+      <span
+        class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold"
+      >
+        3
+      </span>
+    </button>
+
+    <!-- User Profile -->
+    <div class="relative">
+      <button
+        class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+        (click)="toggleDropdown()"
+      >
+        <img
+          src="/images/logo.svg"
+          alt="User Profile"
+          class="h-8 w-8 rounded-full"
+        />
+        <span class="hidden md:inline-block font-medium text-gray-700">
+          {{ nomPrenom?.Nom }} {{ nomPrenom?.Prenom }}        </span>
+        <i
+          class="fa-solid fa-chevron-down text-gray-600 transition-transform duration-200"
+          [ngClass]="{ 'rotate-180': isDropdownOpen }"
+        ></i>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div
+        [@dropdown]="isDropdownOpen"
+        *ngIf="isDropdownOpen"
+        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+      >
+        <a
+          href="/profile"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+          >Profile</a
+        >
+        <a
+          href="/settings"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+          >Settings</a
+        >
+        <button
+          class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

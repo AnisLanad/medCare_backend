@@ -1,0 +1,240 @@
+<div
+  *ngIf="isOpen"
+  id="modal"
+  aria-labelledby="modal-title"
+  role="dialog"
+  [@fadeInOut]="isOpen"
+  class="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl p-4 sm:p-8 relative overflow-y-auto max-h-[95vh] modal-scrollbar"
+    role="dialog"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <button
+      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+    <h2
+      id="modal-title"
+      class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6"
+    >
+      Add Summary
+    </h2>
+
+    <form class="space-y-6" [formGroup]="summaryForm" (ngSubmit)="onSubmit()">
+      <!-- Patient's Symptoms -->
+      <div>
+        <label
+          for="PatientSymptoms"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Patient's Symptoms
+        </label>
+        <textarea
+          id="PatientSymptoms"
+          name="PatientSymptoms"
+          formControlName="PatientSymptoms"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter symptoms"
+          rows="3"
+        ></textarea>
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            summaryForm.get('symptoms')?.invalid &&
+            summaryForm.get('symptoms')?.touched
+          "
+        >
+          Symptoms are required.
+        </div>
+      </div>
+
+      <!-- Measure Section -->
+      <div class="grid grid-cols-2 gap-4 items-center">
+        <div class="relative">
+          <label for="measure" class="block text-sm font-medium text-gray-700">
+            measure
+          </label>
+          <input
+            (click)="openMeasureOptions()"
+            id="measure"
+            name="measure"
+            formControlName="measure"
+            type="text"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter measure"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              summaryForm.get('measure')?.invalid &&
+              summaryForm.get('measure')?.touched
+            "
+          >
+            Measure is required.
+          </div>
+          <ul
+            *ngIf="isMeasureOptionsOpen"
+            class="absolute top-full left-0 right-0 max-h-40 overflow-y-auto bg-white rounded-md shadow-lg z-10"
+            #measureOptionsDropdown
+          >
+            <li
+              *ngFor="let measure of measureOptions"
+              class="p-2 hover:bg-gray-100 cursor-pointer"
+              (click)="setMeasure(measure)"
+            >
+              {{ measure }}
+            </li>
+          </ul>
+        </div>
+        <div>
+          <label
+            for="measureValue"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Value
+          </label>
+
+          <input
+            id="measureValue"
+            name="measureValue"
+            formControlName="measureValue"
+            type="number"
+            min="0"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="0.98"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              summaryForm.get('value')?.invalid &&
+              summaryForm.get('value')?.touched
+            "
+          >
+            Value is required.
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-x-4">
+        <!-- Diagnostic Established -->
+        <div class="flex items-center gap-2">
+          <input
+            id="diagnosticEstablished"
+            name="diagnosticEstablished"
+            formControlName="diagnosticEstablished"
+            type="checkbox"
+            class="rounded border-gray-300 text-blue-500 focus:ring-2 focus:ring-blue-500"
+          />
+          <label for="diagnosticEstablished" class="text-sm text-gray-700">
+            Diagnostic Established
+          </label>
+        </div>
+
+        <!-- Add Prescription Button -->
+        <button
+          (click)="addPrescription()"
+          *ngIf="summaryForm.get('diagnosticEstablished')?.value"
+          type="button"
+          class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          <i class="fas fa-plus-circle mr-2"></i> Add Prescription
+        </button>
+      </div>
+
+      <!-- Patient's History and Next Consultation -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="history" class="block text-sm font-medium text-gray-700">
+            Patient's History
+          </label>
+          <input
+            id="history"
+            name="patientHistory"
+            formControlName="patientHistory"
+            type="text"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter the patient's history"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              summaryForm.get('patientHistory')?.invalid &&
+              summaryForm.get('patientHistory')?.touched
+            "
+          >
+            Patient's history is required.
+          </div>
+        </div>
+        <div>
+          <label
+            for="next-consultation"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Next Consultation
+          </label>
+          <input
+            id="next-consultation"
+            name="nextConsultation"
+            formControlName="nextConsultation"
+            type="date"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              summaryForm.get('nextConsultation')?.invalid &&
+              summaryForm.get('nextConsultation')?.touched
+            "
+          >
+            Next consultation date is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagnostic -->
+      <div>
+        <label for="diagnostic" class="block text-sm font-medium text-gray-700">
+          Diagnostic
+        </label>
+        <textarea
+          id="diagnostic"
+          name="diagnostic"
+          formControlName="diagnostic"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter diagnostic"
+          rows="3"
+        ></textarea>
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            summaryForm.get('diagnostic')?.invalid &&
+            summaryForm.get('diagnostic')?.touched
+          "
+        >
+          Diagnostic is required.
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end space-x-4">
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<section class="pb-10">
+  <h3 class="text-center font-acme text-dark-gray font-semibold text-4xl">
+    Frequently Asked Questions (FAQ)
+  </h3>
+  <div class="flex flex-col gap-y-2 mt-3">
+    <app-faq-item
+      *ngFor="let faqItem of faqItems; trackBy: trackByFn"
+      [question]="faqItem.question"
+      [answer]="faqItem.answer"
+    ></app-faq-item>
+  </div>
+</section>

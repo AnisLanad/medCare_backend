@@ -1,0 +1,345 @@
+<div
+  *ngIf="isOpen"
+  id="modal"
+  aria-labelledby="modal-title"
+  role="dialog"
+  [@fadeInOut]="isOpen"
+  class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl p-4 sm:p-8 relative overflow-y-auto max-h-[95vh] modal-scrollbar"
+    role="dialog"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <button
+      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+    <h2
+      id="modal-title"
+      class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6"
+    >
+      Medical Prescription Form
+    </h2>
+    <!-- form -->
+    <form
+      class="space-y-6"
+      [formGroup]="prescriptionForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- Personal Information -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label
+            for="first-name"
+            class="block text-sm font-medium text-gray-600"
+          >
+            Patient's First Name
+          </label>
+          <input
+            id="first-name"
+            type="text"
+            name="firstName"
+            formControlName="firstName"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter first name"
+            readonly
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('firstName')?.invalid &&
+              prescriptionForm.get('firstName')?.touched
+            "
+          >
+            First name is required.
+          </div>
+        </div>
+        <div>
+          <label
+            for="last-name"
+            class="block text-sm font-medium text-gray-600"
+          >
+            Patient's Last Name
+          </label>
+          <input
+            id="last-name"
+            type="text"
+            name="lastName"
+            formControlName="lastName"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter last name"
+            readonly
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('lastName')?.invalid &&
+              prescriptionForm.get('lastName')?.touched
+            "
+          >
+            Last name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="age" class="block text-sm font-medium text-gray-600">
+            Patient's Age
+          </label>
+          <input
+            id="age"
+            type="number"
+            min="1"
+            max="120"
+            name="age"
+            formControlName="age"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="e.g., 35"
+            readonly
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('age')?.invalid &&
+              prescriptionForm.get('age')?.touched
+            "
+          >
+            Age must be a valid number between 1 and 120.
+          </div>
+        </div>
+        <div>
+          <label for="nss" class="block text-sm font-medium text-gray-600">
+            NSS
+          </label>
+          <input
+            id="nss"
+            type="text"
+            name="nss"
+            formControlName="nss"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="e.g., 009555932155"
+            readonly
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('nss')?.invalid &&
+              prescriptionForm.get('nss')?.touched
+            "
+          >
+            NSS is required.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="description"
+          class="block text-sm font-medium text-gray-600"
+        >
+          Description
+        </label>
+        <input
+          id="description"
+          type="text"
+          name="description"
+          formControlName="description"
+          class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter description"
+        />
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            prescriptionForm.get('description')?.invalid &&
+            prescriptionForm.get('description')?.touched
+          "
+        >
+          description is required.
+        </div>
+      </div>
+      <!-- Treatment Section -->
+      <div>
+        <label class="block text-sm font-medium text-gray-600">
+          Treatments
+        </label>
+        <div formArrayName="treatments" class="space-y-4">
+          <!-- Loop through the treatments FormArray -->
+          <div
+            *ngFor="let treatment of treatments.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <div class="flex items-center gap-4">
+              <!-- Medicament Dropdown -->
+              <div>
+                <label
+                  for="treatment-{{ i }}"
+                  class="block text-sm font-medium text-gray-600"
+                >
+                  Treatment
+                </label>
+                <select
+                  id="treatment-{{ i }}"
+                  formControlName="id"
+                  class="p-2 border rounded-md"
+                >
+                  <option [value]="1" disabled>Select a medicament</option>
+                  <option
+                    *ngFor="let medicament of medicaments"
+                    [value]="medicament.id"
+                  >
+                    {{ medicament.Nom }} - {{ medicament.Dosage }} -
+                    {{ medicament.Fabricant }} - {{ medicament.Forme }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Posologie Input -->
+              <div>
+                <label
+                  for="posologie-{{ i }}"
+                  class="block text-sm font-medium text-gray-600"
+                >
+                  Posologie
+                </label>
+                <input
+                  id="posologie-{{ i }}"
+                  type="text"
+                  formControlName="posologie"
+                  class="p-2 border rounded-md w-full"
+                  placeholder="Enter posologie"
+                />
+              </div>
+
+              <!-- Delete Button -->
+              <button
+                *ngIf="treatments.length > 1"
+                type="button"
+                (click)="removeTreatment(i)"
+                class="text-red-600 hover:text-red-800 focus:outline-none"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+
+            <!-- Error Messages -->
+            <div
+              *ngIf="treatment.invalid && treatment.touched"
+              class="text-sm text-red-600 mt-1"
+            >
+              Please fill out all fields correctly.
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Treatment Button -->
+        <button
+          type="button"
+          (click)="addTreatment()"
+          class="mt-4 p-2 bg-blue-500 text-white rounded-md"
+        >
+          Add Treatment
+        </button>
+      </div>
+
+      <!-- Date Signed -->
+      <div>
+        <label
+          for="date-signed"
+          class="block text-sm font-medium text-gray-600"
+        >
+          Date Signed
+        </label>
+        <input
+          id="date-signed"
+          type="date"
+          name="dateSigned"
+          formControlName="dateSigned"
+          class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            prescriptionForm.get('dateSigned')?.invalid &&
+            prescriptionForm.get('dateSigned')?.touched
+          "
+        >
+          Date signed is required.
+        </div>
+      </div>
+
+      <!-- Doctor's Signature -->
+      <div>
+        <label for="signature" class="block text-sm font-medium text-gray-600">
+          Doctor's Signature
+        </label>
+        <div
+          *ngIf="!isSignaturePadOpen && !signatureUrl"
+          class="flex items-center justify-between p-4 border rounded-lg bg-gray-50"
+        >
+          <div class="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 text-gray-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16 6h.01M3.23 8.21l9.62 9.62a1 1 0 00.71.29h5.06a1 1 0 001-1v-5.06a1 1 0 00-.29-.71l-9.62-9.62a1 1 0 00-1.42 0l-5.06 5.06a1 1 0 000 1.42z"
+              />
+            </svg>
+            <span class="text-sm text-gray-500"> No signature added </span>
+          </div>
+          <button
+            (click)="openSignaturePad()"
+            type="button"
+            class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          >
+            Sign
+          </button>
+        </div>
+        <ng-container *ngIf="isSignaturePadOpen">
+          <app-signature-pad
+            (onSaveSignature)="saveSignature($event)"
+          ></app-signature-pad>
+        </ng-container>
+        <div *ngIf="signatureUrl" class="relative">
+          <button
+            (click)="removeSignature()"
+            type="button"
+            title="Remove signature"
+            class="absolute top-2 right-2 text-lg font-medium text-red-600 hover:text-red-800 focus:outline-none"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+          <img [src]="signatureUrl" alt="Signature" class="w-full" />
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between">
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="px-6 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

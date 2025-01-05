@@ -1,0 +1,165 @@
+<!-- Main container with animated gradient background -->
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex flex-col justify-center items-center px-4 relative overflow-hidden"
+>
+  <!-- Animated particles background -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div
+      *ngFor="let i of [1, 2, 3, 4, 5, 6]"
+      [ngStyle]="{ 'animation-delay': i * 0.3 + 's' }"
+      class="absolute rounded-full mix-blend-multiply filter blur-xl opacity-50"
+      [class]="'animate-float-' + i"
+    >
+      <div class="w-96 h-96 rounded-full" [ngClass]="getBlobColor(i)"></div>
+    </div>
+  </div>
+
+  <!-- Interactive card container with glass effect -->
+  <div
+    [@fadeSlideUp]
+    class="relative max-w-5xl w-full backdrop-blur-lg bg-white/80 rounded-3xl shadow-2xl p-8 md:p-12 border border-white/50 hover:shadow-blue-200/50 transition-all duration-500"
+  >
+    <!-- Responsive grid layout -->
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Content section -->
+      <div class="text-center md:text-left space-y-8">
+        <!-- Animated 404 text -->
+        <div class="space-y-3 relative">
+          <h1
+            class="text-8xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 animate-pulse"
+          >
+            404
+          </h1>
+          <div
+            class="absolute -top-8 -left-8 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"
+          ></div>
+          <h2 class="text-4xl md:text-5xl font-medium text-blue-900">
+            Page Not Found
+          </h2>
+        </div>
+
+        <p class="text-lg text-blue-700">
+          Don't worry, sometimes even the best explorers get lost. Let's help
+          you find your way back.
+        </p>
+
+        <!-- Interactive buttons with advanced hover effects -->
+        <div
+          class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+        >
+          <button
+            (click)="goBack()"
+            class="group relative px-8 py-4 bg-blue-600 text-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105"
+          >
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <span
+                class="group-hover:-translate-x-1 transition-transform duration-300"
+                >←</span
+              >
+              Go Back
+            </span>
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-blue-700 to-blue-500 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+            ></div>
+          </button>
+
+          <button
+            (click)="goHome()"
+            class="group px-8 py-4 bg-white text-blue-600 rounded-xl border-2 border-blue-100 hover:border-blue-200 hover:bg-blue-50 transition-all duration-300 hover:scale-105"
+          >
+            <span class="flex items-center justify-center gap-2">
+              Home
+              <span
+                class="transform group-hover:translate-x-1 transition-transform duration-300"
+              >
+                →
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom SVG illustration section -->
+      <div class="hidden md:block">
+        <div [@float] class="w-full relative">
+          <svg viewBox="0 0 500 500" class="w-full h-full">
+            <!-- Animated circles background -->
+            <circle
+              cx="250"
+              cy="250"
+              r="200"
+              class="fill-blue-100/50 animate-pulse"
+            />
+            <circle
+              cx="250"
+              cy="250"
+              r="150"
+              class="fill-blue-200/50 animate-pulse [animation-delay:200ms]"
+            />
+            <circle
+              cx="250"
+              cy="250"
+              r="100"
+              class="fill-blue-300/50 animate-pulse [animation-delay:400ms]"
+            />
+
+            <!-- Compass design -->
+            <g class="compass-group" [class.animate-spin-slow]="isHovering">
+              <!-- Outer ring -->
+              <circle
+                cx="250"
+                cy="250"
+                r="180"
+                class="fill-none stroke-blue-600 stroke-2"
+              />
+              <!-- Cardinal points -->
+              <text
+                x="250"
+                y="50"
+                class="text-3xl fill-blue-800 text-center"
+                text-anchor="middle"
+              >
+                N
+              </text>
+              <text
+                x="450"
+                y="250"
+                class="text-3xl fill-blue-800 text-center"
+                text-anchor="middle"
+              >
+                E
+              </text>
+              <text
+                x="250"
+                y="450"
+                class="text-3xl fill-blue-800 text-center"
+                text-anchor="middle"
+              >
+                S
+              </text>
+              <text
+                x="50"
+                y="250"
+                class="text-3xl fill-blue-800 text-center"
+                text-anchor="middle"
+              >
+                W
+              </text>
+              <!-- Compass needle -->
+              <path
+                d="M250 100 L270 250 L250 400 L230 250 Z"
+                class="fill-blue-600 transform origin-center"
+              />
+              <circle
+                cx="250"
+                cy="250"
+                r="20"
+                class="fill-white stroke-blue-600 stroke-2"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

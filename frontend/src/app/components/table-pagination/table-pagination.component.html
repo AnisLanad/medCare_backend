@@ -1,0 +1,21 @@
+<div class="flex items-center justify-between mt-4">
+  <!-- Previous Button -->
+  <button
+    class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-200 rounded-l-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    [disabled]="!hasPreviousPage"
+    (click)="onPreviousPage()"
+  >
+    Previous
+  </button>
+  <span class="text-sm text-gray-700">
+    Page {{ currentPage }} of {{ totalPages }}
+  </span>
+  <!-- Next Button -->
+  <button
+    class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-200 rounded-r-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    [disabled]="!hasLastPage"
+    (click)="onNextPage()"
+  >
+    Next
+  </button>
+</div>

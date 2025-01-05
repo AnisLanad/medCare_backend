@@ -1,0 +1,46 @@
+<nav
+  class="sticky top-0 h-screen shrink-0 border-r border-slate-300 p-2.5 overflow-hidden transition-[width] duration-300"
+  [ngClass]="{
+    'w-16': !isOpen(),
+    'w-60': isOpen()
+  }"
+>
+  <!-- Header Section -->
+  <div
+    [ngClass]="{ 'w-fit': !isOpen() }"
+    class="mb-3 flex pb-3 border-b border-slate-300"
+  >
+    <div class="flex items-center gap-x-2">
+      <button
+        class="size-10 text-lg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
+        (click)="toggleIsOpen()"
+      >
+        <i *ngIf="!isOpen()" class="fa-solid fa-bars"></i>
+        <i *ngIf="isOpen()" class="fa-solid fa-close"></i>
+      </button>
+      <span *ngIf="isOpen()" class="block text-base font-bold text-blue-800"
+        >medCare</span
+      >
+    </div>
+  </div>
+  <!-- Navigation Links -->
+  <ul class="space-y-1">
+    <li *ngFor="let link of links; trackBy: trackByLink" class="w-full">
+      <a
+        routerLink="{{ link.path }}"
+        class="flex items-center gap-x-2.5 h-10 p-2.5 transition-all duration-300 rounded-md overflow-hidden"
+        routerLinkActive="bg-blue-100 text-blue-800 hover:bg-blue-100"
+        [ngClass]="{
+          'hover:bg-slate-100': !isActive(link),
+          'w-10': !isOpen(),
+          'w-full': isOpen()
+        }"
+      >
+        <i class="{{ link.icon }} text-lg"></i>
+        <span *ngIf="isOpen()" class="font-medium whitespace-nowrap">
+          {{ link.label }}
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>

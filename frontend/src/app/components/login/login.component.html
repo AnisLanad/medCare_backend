@@ -1,0 +1,111 @@
+<div
+  class="flex justify-center items-center min-h-screen w-screen bg-gradient-to-b from-blue-200 via-fuchsia-50 to-transparent"
+>
+  <main
+    class="w-full max-w-4xl min-h-screen md:min-h-0 shadow-lg flex flex-col-reverse md:flex-row md:rounded-3xl overflow-hidden md:mx-2"
+  >
+    <section
+      class="flex-1 px-7 pt-7 rounded-t-2xl md:rounded-t-none bg-white md:-mt-0 -mt-10"
+    >
+      <header>
+        <a routerLink="/">
+          <img
+            class="h-14"
+            src="/images/logo.svg"
+            alt="logo"
+            loading="lazy"
+            title="MedCare"
+          />
+        </a>
+        <div class="mt-4 space-y-1">
+          <h1 class="font-roboto font-black text-xl">
+            Log In to Your MedCare Account
+          </h1>
+          <h2 class="font-roboto font-medium text-dark-gray text-sm">
+            Welcome back
+          </h2>
+        </div>
+      </header>
+      <div class="relative max-w-sm mx-auto">
+        <hr class="my-4 border border-medium-gray" />
+        <p
+          class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-2 text-dark-gray font-roboto text-xs md:text-sm font-medium"
+        >
+          log in using your email
+        </p>
+      </div>
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="login()"
+        role="form"
+        ria-labelledby="login-title"
+      >
+        <div class="space-y-2">
+          <div class="form-control">
+            <label for="email">Email :</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              autofocus
+              formControlName="email"
+              aria-required="true"
+            />
+            <p
+              class="text-red-500 text-sm"
+              *ngIf="
+                loginForm.get('email')?.invalid &&
+                loginForm.get('email')?.touched
+              "
+            >
+              Email is required.
+            </p>
+          </div>
+          <div class="form-control">
+            <label for="password">Password :</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              required
+              formControlName="password"
+              aria-required="true"
+            />
+            <p
+              class="text-red-500 text-sm"
+              *ngIf="
+                loginForm.get('password')?.invalid &&
+                loginForm.get('password')?.touched
+              "
+            >
+              Password is required.
+            </p>
+          </div>
+        </div>
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="mt-4 block w-full primaryBtn"
+        >
+          Log In
+        </button>
+      </form>
+    </section>
+    <div class="md:flex-1">
+      <img
+        class="hidden md:block"
+        src="/images/loginPic.svg"
+        alt="login"
+        alt="Login illustration"
+      />
+      <img
+        loading="lazy"
+        class="md:hidden w-full h-full object-cover"
+        src="/images/loginPicSmall.svg"
+        alt="login"
+        alt="Login illustration small"
+      />
+    </div>
+  </main>
+</div>

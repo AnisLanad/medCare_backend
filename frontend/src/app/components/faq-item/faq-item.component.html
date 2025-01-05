@@ -1,0 +1,52 @@
+<div
+  [ngClass]="{
+    'bg-secondary-blue': isOpen()
+  }"
+  class="relative border border-primary-blue rounded-md p-4 cursor-pointer transition-all duration-500"
+  (click)="toggleIsOpen()"
+>
+  <!-- Content Container -->
+  <div class="font-roboto">
+    <!-- Question Text -->
+    <p
+      [ngClass]="{
+        'text-white': isOpen(),
+        'text-dark-gray': !isOpen()
+      }"
+      class="font-semibold text-lg transition-colors duration-300"
+    >
+      {{ question }}
+    </p>
+
+    <!-- Answer Text -->
+    <div
+      [ngClass]="{
+        'max-h-0 opacity-0': !isOpen(),
+        'max-h-40 opacity-100': isOpen()
+      }"
+      class="overflow-hidden pl-2 w-11/12 font-medium text-white transition-all duration-500 ease-in-out"
+    >
+      <p>{{ answer }}</p>
+    </div>
+  </div>
+
+  <!-- Toggle Icon -->
+  <svg
+    [ngClass]="{
+      'rotate-180 text-white': isOpen(),
+      'text-dark-gray': !isOpen()
+    }"
+    class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-transform duration-500 ease-in-out"
+    role="button"
+    width="28"
+    height="14"
+    viewBox="0 0 28 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M26.4914 0.979481C26.3172 0.803878 26.11 0.664497 25.8817 0.56938C25.6534 0.474263 25.4085 0.425293 25.1612 0.425293C24.9138 0.425293 24.669 0.474263 24.4406 0.56938C24.2123 0.664497 24.0051 0.803878 23.831 0.979481L15.2502 9.56026C15.076 9.73587 14.8688 9.87525 14.6405 9.97036C14.4122 10.0655 14.1673 10.1145 13.92 10.1145C13.6726 10.1145 13.4277 10.0655 13.1994 9.97036C12.9711 9.87525 12.7639 9.73587 12.5897 9.56026L4.00894 0.979481C3.83477 0.803878 3.62756 0.664497 3.39925 0.56938C3.17094 0.474263 2.92606 0.425293 2.67873 0.425293C2.4314 0.425293 2.18652 0.474263 1.95821 0.56938C1.72991 0.664497 1.52269 0.803878 1.34852 0.979481C0.999573 1.33051 0.803711 1.80536 0.803711 2.30032C0.803711 2.79528 0.999573 3.27013 1.34852 3.62116L9.94805 12.2207C11.0019 13.2732 12.4305 13.8644 13.92 13.8644C15.4094 13.8644 16.838 13.2732 17.8918 12.2207L26.4914 3.62116C26.8403 3.27013 27.0362 2.79528 27.0362 2.30032C27.0362 1.80536 26.8403 1.33051 26.4914 0.979481Z"
+      fill="currentColor"
+    />
+  </svg>
+</div>
