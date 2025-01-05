@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, throwError, of, tap } from 'rxjs';
+import {BehaviorSubject, Observable, catchError, map, throwError, of, tap, combineLatest} from 'rxjs';
 import { Patient } from '../components/modals/patient.interface';
 
 
@@ -38,7 +38,7 @@ export class PatientService {
       'Content-Type': 'application/vnd.api+json',
       'Accept': 'application/vnd.api+json'
     };
-  
+
     const apiPayload = {
       data: {
         type: 'Patient',
@@ -59,7 +59,7 @@ export class PatientService {
         }
       }
     };
-    
+
     return this.http.post<any>(`http://127.0.0.1:8000/api/patients/`, apiPayload, { headers })
       .pipe(
         map(response => {
@@ -86,8 +86,8 @@ export class PatientService {
         })
       );
 }
-   
-  
+
+
   private mapApiToPatient(apiData: any): Patient {
     return {
       id: apiData.DPI_ID,
@@ -107,11 +107,35 @@ export class PatientService {
     };
   }
 
+  filteredPatients$ = combineLatest([
+    this.patientsSubject,
+    this.searchTermSubject
+  ]).pipe(
+    map(([patients, searchTerm]) => {
+      if (!searchTerm.trim()) {
+        return patients;
+      }
+
+      const searchLower = searchTerm.toLowerCase().trim();
+      return patients.filter(patient =>
+        patient.id?.toString().includes(searchLower) ||
+        patient.name.first.toLowerCase().includes(searchLower) ||
+        patient.name.last.toLowerCase().includes(searchLower) ||
+        patient.phoneNumber?.toLowerCase().includes(searchLower) ||
+        patient.nss?.toLowerCase().includes(searchLower) ||
+        patient.insurance?.toLowerCase().includes(searchLower) ||
+        patient.address?.toLowerCase().includes(searchLower) ||
+        patient.emergencyContact?.toLowerCase().includes(searchLower)
+      );
+    })
+  );
+
+  // Update getPatients to return filtered results
   getPatients(): Observable<Patient[]> {
-    return this.patientsSubject.asObservable();
+    return this.filteredPatients$;
   }
-  
-  
+
+
   deletePatient(id: number): Observable<void> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -140,9 +164,9 @@ export class PatientService {
       'Content-Type': 'application/vnd.api+json',
       'Accept': 'application/vnd.api+json'
     });
-  
+
     const patientId = patient.id?.toString();
-  
+
     const apiPayload = {
       data: {
         type: 'Patient',
@@ -163,18 +187,18 @@ export class PatientService {
         }
       }
     };
-  
+
     // Mettre à jour immédiatement le subject avec les nouvelles données
     const currentPatients = this.patientsSubject.value;
     const updatedPatients = currentPatients.map(p =>
       p.id === patient.id ? patient : p
     );
     this.patientsSubject.next(updatedPatients);
-  
+
     return this.http.put<any>(
       `${this.apiUrl}/patients/${patientId}/`,
       apiPayload,
-      { 
+      {
         headers,
         observe: 'response'
       }
@@ -201,7 +225,7 @@ export class PatientService {
         // En cas d'erreur, on revient aux données précédentes
         const previousPatients = currentPatients;
         this.patientsSubject.next(previousPatients);
-        
+
         if (error.status === 409) {
           return throwError(() => new Error('Version conflict: The patient data may have been modified. Please refresh and try again.'));
         }
@@ -209,7 +233,7 @@ export class PatientService {
       })
     );
   }
-  
+
   // Ajout d'une méthode pour rafraîchir les données
   private fetchPatients() {
     return this.http.get<any>(`${this.apiUrl}/patients/`).pipe(

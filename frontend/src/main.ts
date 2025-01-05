@@ -1,25 +1,12 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { LoggingInterceptor } from './app/interceptors/logging.interceptor';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app.routes';
+import {provideHttpClient} from '@angular/common/http';
 
-// Pour un intercepteur basé sur une classe
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(
-      withInterceptors([
-        (req, next) => {
-          console.log('Request:', {
-            url: req.url,
-            method: req.method,
-            headers: req.headers.keys().map(key => `${key}: ${req.headers.get(key)}`),
-            body: req.body
-          });
-          return next(req);
-        }
-      ])
-    )
+    provideRouter(routes),
+    provideHttpClient()
   ]
-});
-
-  
+}).catch(err => console.error(err));

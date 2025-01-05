@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, throwError, of, tap } from 'rxjs';
+import {BehaviorSubject, Observable, catchError, map, throwError, of, tap, combineLatest} from 'rxjs';
 
 // Define the Doctor interface
 export interface Doctor {
@@ -52,7 +52,7 @@ export class DoctorService {
       'Content-Type': 'application/json',  // Changed from vnd.api+json
       'Accept': 'application/json'
     });
-  
+
     // Create the exact payload structure you need
     const apiPayload = {
       Medecin_ID: 2,  // Hardcoded for testing
@@ -65,7 +65,7 @@ export class DoctorService {
       specialite_display: doctor.specialty,
       MotDePasse: doctor.password,
     };
-  
+
     return this.http.post<any>(`${this.apiUrl}/medecins/`, apiPayload, { headers }).pipe(
       map(response => {
         const newDoctor = this.mapApiToDoctor(response);
@@ -86,9 +86,9 @@ export class DoctorService {
       'Content-Type': 'application/vnd.api+json',
       'Accept': 'application/vnd.api+json'
     });
-  
+
     const doctorId = doctor.id?.toString();
-  
+
     const apiPayload = {
       data: {
         type: 'Medecin',
@@ -112,7 +112,7 @@ export class DoctorService {
         }
       }
     };
-  
+
     return this.http.put<any>(
       `${this.apiUrl}/medecins/${doctorId}/`,
       apiPayload,
@@ -162,8 +162,30 @@ export class DoctorService {
     };
   }
 
+  filteredDoctors$ = combineLatest([
+    this.doctorsSubject,
+    this.searchTermSubject
+  ]).pipe(
+    map(([doctors, searchTerm]) => {
+      if (!searchTerm.trim()) {
+        return doctors;
+      }
+
+      const searchLower = searchTerm.toLowerCase().trim();
+      return doctors.filter(doctor =>
+        doctor.id?.toString().includes(searchLower) ||
+        doctor.name.first.toLowerCase().includes(searchLower) ||
+        doctor.name.last.toLowerCase().includes(searchLower) ||
+        doctor.phoneNumber.toLowerCase().includes(searchLower) ||
+        doctor.email.toLowerCase().includes(searchLower) ||
+        doctor.specialty.toLowerCase().includes(searchLower)
+      );
+    })
+  );
+
+  // Update getDoctors to return filtered results
   getDoctors(): Observable<Doctor[]> {
-    return this.doctorsSubject.asObservable();
+    return this.filteredDoctors$;
   }
 
   deleteDoctor(id: number): Observable<void> {

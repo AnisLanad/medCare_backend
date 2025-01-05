@@ -1,5 +1,6 @@
-import { Routes } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import {Routes} from '@angular/router';
+import {provideHttpClient} from '@angular/common/http';
+
 export const routes: Routes = [
   {
     path: '',
@@ -16,7 +17,7 @@ export const routes: Routes = [
         (m) => m.LoginComponent
       ),
     title: 'Login',
-    
+
   },
   {
     path: '',
@@ -51,7 +52,61 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./components/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
+    children: [
+      {
+        path: '',  // Empty path for child route
+        redirectTo: 'home',
+        pathMatch: 'full'  // Add this line
+      },
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./components/dashboard-home/dashbaord-home').then(
+            (m) => m.DashboardHomeComponent
+          ),
+        title: 'Home',
+      },
+      {
+        path: 'patient',
+        loadComponent: () =>
+          import('./components/patient-dash/patient-dash.component').then(
+            (m) => m.PatientComponent
+          ),
+        title: 'Patient',
+      },
+      {
+        path: 'doctor',
+        loadComponent: () =>
+          import('./components/doctor/doctor.component').then(
+            (m) => m.DoctorComponent
+          ),
+        title: 'Doctor',
 
+      },
+      {
+        path: 'lab',
+        loadComponent: () =>
+          import('./components/lab/lab.component').then(
+            (m) => m.LabComponent
+          ),
+        title: 'Lab',
+      },
+      {
+        path: 'nurse',
+        loadComponent: () =>
+          import('./components/nurse/nurse.component').then(
+            (m) => m.NurseComponent
+          ),
+        title: 'Nurse',
+      }
+    ]
+  },
   // 404
   {
     path: '**',
