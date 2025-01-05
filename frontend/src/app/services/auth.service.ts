@@ -22,20 +22,18 @@ export class AuthService {
       })
       .pipe(
         tap((response: any) => {
-          // Stocker les tokens dans le localStorage
+          // Store tokens and other details in localStorage
           localStorage.setItem('access', response.access);
           localStorage.setItem('refresh', response.refresh);
           localStorage.setItem('role', response.role);
-          localStorage.setItem('username', response.username); // Storer le role
-
-          // Optionnel : Mettre en place un mécanisme pour vérifier l'expiration des tokens
+          localStorage.setItem('username', response.username);
         })
       );
   }
 
   saveToken(token: string): void {
-    localStorage.setItem('access_token', token); // Sauvegarde du token dans le localStorage
-    this.tokenSubject.next(token); // Met à jour le token dans le service
+    localStorage.setItem('access_token', token); // Save token in localStorage
+    this.tokenSubject.next(token); // Update token in the service
   }
 
   getToken(): string | null {
@@ -52,38 +50,56 @@ export class AuthService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getUserRole() {
-    const token = localStorage.getItem('role'); // Récupérer le token
-    if (token) {
-    }
-    return token;
+  getUserRole(): string | null {
+    const role = localStorage.getItem('role');
+    return role;
   }
 
-  getUserName() {
+  getUserName(): Observable<{ Nom: string; Prenom: string }> {
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
-    const Name = this.http.get<{ Nom: string; Prenom: string }>(
+    return this.http.get<{ Nom: string; Prenom: string }>(
       `http://127.0.0.1:8000/api/user/${username}/${role}/`
     );
-    return Name;
   }
 
-  getMedecinPatients() {
+  getMedecinPatients(): Observable<Array<Tpatient>> {
     const username = localStorage.getItem('username');
-    const Patients = this.http.get<
-      Array<Tpatient>
-    >(
-      `http://127.0.0.1:8000/api/medecin/${username}/patients/` // Utilisation des backticks pour l'URL
+    return this.http.get<Array<Tpatient>>(
+      `http://127.0.0.1:8000/api/medecin/${username}/patients/`
     );
-    return Patients;
   }
-  getNbConsultations() {
+
+  getAllPatients(): Observable<
+    Array<{
+      DPI_ID: number;
+      Nom: string;
+      Prenom: string;
+      DateNaissance: string;
+      NSS: string;
+    }>
+  > {
+    return this.http.get<
+      Array<{
+        DPI_ID: number;
+        Nom: string;
+        Prenom: string;
+        DateNaissance: string;
+        NSS: string;
+      }>
+    >(`http://127.0.0.1:8000/api/patients/`);
+  }
+
+  getNbConsultations(): Observable<{
+    count: number;
+    patient1: string;
+    patient2: string;
+  }> {
     const username = localStorage.getItem('username');
-    const nbcons = this.http.get<{
+    return this.http.get<{
       count: number;
       patient1: string;
       patient2: string;
     }>(`http://127.0.0.1:8000/api/medecin/${username}/nbcons/`);
-    return nbcons;
   }
 }
