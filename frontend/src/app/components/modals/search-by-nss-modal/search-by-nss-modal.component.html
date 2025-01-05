@@ -45,6 +45,14 @@
           class="block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-3 outline-none"
           placeholder="Enter patient NSS"
         />
+        <div
+          *ngIf="searchData.isLoading"
+          class="flex justify-center items-center mt-4"
+        >
+          <div
+            class="w-10 h-10 border-t-4 border-blue-500 border-solid rounded-full animate-spin"
+          ></div>
+        </div>
         <p
           class="text-red-500 text-sm"
           *ngIf="

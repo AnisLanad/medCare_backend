@@ -46,6 +46,7 @@
             formControlName="firstName"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="Enter first name"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -71,6 +72,7 @@
             formControlName="lastName"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="Enter last name"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -98,6 +100,7 @@
             formControlName="age"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="e.g., 35"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -120,6 +123,7 @@
             formControlName="nss"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="e.g., 009555932155"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -133,43 +137,112 @@
         </div>
       </div>
 
+      <div>
+        <label
+          for="description"
+          class="block text-sm font-medium text-gray-600"
+        >
+          Description
+        </label>
+        <input
+          id="description"
+          type="text"
+          name="description"
+          formControlName="description"
+          class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter description"
+        />
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            prescriptionForm.get('description')?.invalid &&
+            prescriptionForm.get('description')?.touched
+          "
+        >
+          description is required.
+        </div>
+      </div>
       <!-- Treatment Section -->
       <div>
         <label class="block text-sm font-medium text-gray-600">
           Treatments
         </label>
-        <div formArrayName="treatments" class="space-y-2">
-          <div *ngFor="let treatment of treatments.controls; let i = index">
-            <div class="flex items-center gap-2 mb-2">
-              <input
-                [formControlName]="i"
-                type="text"
-                class="flex-1 p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Medication/Strength/Frequency"
-              />
+        <div formArrayName="treatments" class="space-y-4">
+          <!-- Loop through the treatments FormArray -->
+          <div
+            *ngFor="let treatment of treatments.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <div class="flex items-center gap-4">
+              <!-- Medicament Dropdown -->
+              <div>
+                <label
+                  for="treatment-{{ i }}"
+                  class="block text-sm font-medium text-gray-600"
+                >
+                  Treatment
+                </label>
+                <select
+                  id="treatment-{{ i }}"
+                  formControlName="id"
+                  class="p-2 border rounded-md"
+                >
+                  <option [value]="1" disabled>Select a medicament</option>
+                  <option
+                    *ngFor="let medicament of medicaments"
+                    [value]="medicament.id"
+                  >
+                    {{ medicament.Nom }} - {{ medicament.Dosage }} -
+                    {{ medicament.Fabricant }} - {{ medicament.Forme }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Posologie Input -->
+              <div>
+                <label
+                  for="posologie-{{ i }}"
+                  class="block text-sm font-medium text-gray-600"
+                >
+                  Posologie
+                </label>
+                <input
+                  id="posologie-{{ i }}"
+                  type="text"
+                  formControlName="posologie"
+                  class="p-2 border rounded-md w-full"
+                  placeholder="Enter posologie"
+                />
+              </div>
+
+              <!-- Delete Button -->
               <button
                 *ngIf="treatments.length > 1"
-                (click)="removeTreatment(i)"
                 type="button"
+                (click)="removeTreatment(i)"
                 class="text-red-600 hover:text-red-800 focus:outline-none"
               >
                 <i class="fas fa-trash"></i>
               </button>
             </div>
+
+            <!-- Error Messages -->
             <div
-              class="text-sm text-red-600 mt-1"
               *ngIf="treatment.invalid && treatment.touched"
+              class="text-sm text-red-600 mt-1"
             >
-              Treatment details are required.
+              Please fill out all fields correctly.
             </div>
           </div>
         </div>
+
+        <!-- Add Treatment Button -->
         <button
-          (click)="addTreatment()"
           type="button"
-          class="mt-2 text-sm font-medium text-blue-600 hover:underline"
+          (click)="addTreatment()"
+          class="mt-4 p-2 bg-blue-500 text-white rounded-md"
         >
-          Add more
+          Add Treatment
         </button>
       </div>
 

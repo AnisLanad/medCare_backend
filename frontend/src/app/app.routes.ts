@@ -49,7 +49,13 @@ export const routes: Routes = [
       },
     ],
   },
-
+  {
+    path: 'patient',
+    loadComponent: () =>
+      import('./components/patient-dashboard/patient-dashboard.component').then(
+        (m) => m.PatientDashboardComponent
+      ),
+  },
   // 404
   {
     path: '**',

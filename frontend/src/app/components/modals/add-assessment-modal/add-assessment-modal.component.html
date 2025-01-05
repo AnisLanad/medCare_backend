@@ -46,6 +46,7 @@
             formControlName="firstName"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="Enter first name"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -71,6 +72,7 @@
             formControlName="lastName"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="Enter last name"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -98,6 +100,7 @@
             formControlName="age"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="e.g., 35"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -120,6 +123,7 @@
             formControlName="nss"
             class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="e.g., 009555932155"
+            readonly
           />
           <div
             class="text-sm text-red-600 mt-1"
@@ -278,6 +282,7 @@
       <!-- Action Buttons -->
       <div class="flex items-center justify-between">
         <button
+          type="button"
           (click)="closeModal()"
           type="button"
           class="px-6 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"

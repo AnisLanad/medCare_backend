@@ -13,11 +13,19 @@ import { AuthService } from '../../services/auth.service';
 })
 export class PatientsComponent {
   patientsColumns: TColumn<Tpatient>[] = [
-    { key: 'id', label: 'ID' },
-    { key: 'firstName', label: 'First Name' },
-    { key: 'lastName', label: 'Last Name' },
-    { key: 'birthDate', label: 'Birth Date' },
-    { key: 'nss', label: 'NSS' },
+    { key: 'DPI_ID', label: 'DPI ID' },
+    { key: 'Nom', label: 'First Name' },
+    { key: 'Prenom', label: 'Last Name' },
+    { key: 'Adresse', label: 'Address' },
+    { key: 'Email', label: 'Email' },
+    { key: 'Telephone', label: 'Phone' },
+    { key: 'DateNaissance', label: 'Birth Date' },
+    { key: 'NSS', label: 'NSS' },
+    { key: 'DateMaj', label: 'DateMaj' },
+    { key: 'mutuelle_display', label: 'Mutuelle' },
+    { key: 'NumPerCont', label: 'NumPerCont' },
+    { key: 'age', label: 'Age' },
+    { key: 'Mutuelle', label: 'Mutuelle' },
   ];
 
   patients: Tpatient[] = [];
@@ -29,13 +37,7 @@ export class PatientsComponent {
   ngOnInit() {
     this.authService.getMedecinPatients().subscribe(
       (data) => {
-        this.patients = data.map((patient) => ({
-          id: patient.DPI_ID,
-          firstName: patient.Prenom,
-          lastName: patient.Nom,
-          birthDate: patient.DateNaissance,
-          nss: patient.NSS,
-        }));
+        this.patients = data;
 
         // Mettre à jour filteredPatients
         this.filteredPatients = [...this.patients];
@@ -55,14 +57,10 @@ export class PatientsComponent {
     }
     this.filteredPatients = this.patients.filter((patient) => {
       return (
-        patient.firstName
-          .toLowerCase()
-          .includes(this.searchText.toLowerCase()) ||
-        patient.lastName
-          .toLowerCase()
-          .includes(this.searchText.toLowerCase()) ||
-        patient.nss.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        patient.id.toString().includes(this.searchText)
+        patient.Nom.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        patient.Prenom.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        patient.NSS.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        patient.DPI_ID.toString().includes(this.searchText)
       );
     });
   }

@@ -25,8 +25,10 @@ export class DynamicTableComponent<T> implements OnChanges {
   paginatedData: T[] = [];
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
-      this.totalPages = Math.ceil(this.data.length / this.pageSize);
-      this.updatePaginatedData();
+      if (this.data) {
+        this.totalPages = Math.ceil(this.data.length / this.pageSize);
+        this.updatePaginatedData();
+      }
     }
   }
   updatePaginatedData() {

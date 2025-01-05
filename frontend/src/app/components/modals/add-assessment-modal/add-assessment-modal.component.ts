@@ -10,6 +10,9 @@ import {
 } from '@angular/forms';
 import { SignaturePadComponent } from '../../signature-pad/signature-pad.component';
 import { fadeInOut } from '../../../animations/animations';
+import { SearchedPatientService } from '../../../services/SearchedPatient/searched-patient.service';
+import { Tpatient } from '../../../types/patient.type';
+import { AssessmentService } from '../../../services/AssessmentService/assessment.service';
 
 @Component({
   selector: 'app-add-assessment-modal',
@@ -23,9 +26,12 @@ export class AddAssessmentModalComponent implements OnInit {
   assessmentForm: FormGroup;
   signatureUrl: string = '';
   assessmentTypes = ['Biological assessment', 'Radiological assessment'];
+  patient: Tpatient | null = null;
   constructor(
     private addAssessmentModalService: AddAssessmentModalService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private searchedPatientService: SearchedPatientService,
+    private assessmentService: AssessmentService
   ) {
     this.assessmentForm = this.fb.group({
       firstName: [
@@ -46,7 +52,7 @@ export class AddAssessmentModalComponent implements OnInit {
           Validators.pattern('^[a-zA-Z ]+$'),
         ],
       ],
-      age: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
+      age: [0, [Validators.required, Validators.min(1), Validators.max(120)]],
       nss: [
         '',
         [
@@ -73,6 +79,13 @@ export class AddAssessmentModalComponent implements OnInit {
         this.isOpen = isOpen;
       }
     );
+    this.searchedPatientService.SearchedPatient$.subscribe((patient) => {
+      this.patient = patient;
+      this.assessmentForm.get('firstName')?.setValue(this.patient?.Prenom);
+      this.assessmentForm.get('lastName')?.setValue(this.patient?.Nom);
+      this.assessmentForm.get('age')?.setValue(this.patient?.age);
+      this.assessmentForm.get('nss')?.setValue(this.patient?.NSS);
+    });
   }
   closeModal() {
     this.addAssessmentModalService.closeModal();
@@ -98,10 +111,14 @@ export class AddAssessmentModalComponent implements OnInit {
   onSubmit() {
     if (this.assessmentForm.valid && this.signatureUrl) {
       const data = {
-        ...this.assessmentForm.value,
-        signatureUrl: this.signatureUrl,
+        Medecin: 2,
+        Patient: this.patient?.DPI_ID,
+        Type: this.assessmentForm.get('assessmentType')?.value,
+        Informations: this.assessmentForm.get('assessments')?.value[0],
       };
-      console.log(data);
+      this.assessmentService.addAssessment(data).subscribe((data) => {
+        this.addAssessmentModalService.closeModal();
+      });
     }
   }
   saveSignature(signatureUrl: string) {

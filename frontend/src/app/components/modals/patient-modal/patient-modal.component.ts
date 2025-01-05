@@ -9,6 +9,9 @@ import { Tsummary } from '../../../types/summary.type';
 import { Tprescription } from '../../../types/prescription.type';
 import { Tassessment } from '../../../types/assessment.type';
 import { fadeInOut } from '../../../animations/animations';
+import { Tpatient } from '../../../types/patient.type';
+import { SearchedPatientService } from '../../../services/SearchedPatient/searched-patient.service';
+import { Perform } from '../../../utils/Perform';
 @Component({
   selector: 'app-patient-modal',
   imports: [CommonModule, DynamicTableComponent, TabsComponent],
@@ -18,6 +21,9 @@ import { fadeInOut } from '../../../animations/animations';
 })
 export class PatientModalComponent implements OnInit {
   isOpen = false;
+  patient: Tpatient | null = null;
+  patientSummary: Tsummary[] = [];
+  patientAssessments: any = [];
   tabs: Ttab[] = [
     {
       key: 'summary',
@@ -36,57 +42,52 @@ export class PatientModalComponent implements OnInit {
   setActiveTab(tab: Ttab) {
     this.activeTab = tab;
   }
-  constructor(private patientModalService: PatientModalService) {}
+  constructor(
+    private patientModalService: PatientModalService,
+    private searchedPatientService: SearchedPatientService
+  ) {}
+  summaryData = new Perform<any>();
   ngOnInit(): void {
     this.patientModalService.isPatientModalOpen$.subscribe((isOpen) => {
       this.isOpen = isOpen;
     });
+    this.searchedPatientService.SearchedPatient$.subscribe((patient) => {
+      this.patient = patient;
+    });
+    this.searchedPatientService.patientSummary$.subscribe((patientSummary) => {
+      this.patientSummary = patientSummary;
+    });
+    this.searchedPatientService.patientAssessments$.subscribe(
+      (patientAssessments) => {
+        this.patientAssessments = patientAssessments;
+      }
+    );
   }
   closeModal() {
     this.patientModalService.closeModal();
   }
-  summaryTableColumns: TColumn<Tsummary>[] = [
+  summaryTableColumns: TColumn<Partial<Tsummary>>[] = [
     {
-      key: 'summary',
-      label: 'Summary',
+      key: 'Consultation_ID',
+      label: 'Summary ID',
     },
     {
-      key: 'doctor',
-      label: 'Doctor',
-    },
-    {
-      key: 'date',
+      key: 'Datecons',
       label: 'Date',
     },
     {
-      key: 'diagnosticStatus',
+      key: 'nextConsultation',
+      label: 'Next Consultation',
+    },
+    {
+      key: 'diagnosticEstablished',
       label: 'Diagnostic status',
-      render: (value: Tsummary) =>
+      render: (value) =>
         `<span>${
-          value.diagnosticStatus === 'established'
-            ? '<i class="fa-solid fa-check text-green-600"></i>'
-            : '<i class="fa-solid fa-xmark text-red-600"></i>'
-        } ${value.diagnosticStatus}</span>`,
-    },
-  ];
-  summaryTableData: Tsummary[] = [
-    {
-      summary: 'Summary',
-      doctor: 'Doctor',
-      date: 'Date',
-      diagnosticStatus: 'established',
-    },
-    {
-      summary: 'Summary',
-      doctor: 'Doctor',
-      date: 'Date',
-      diagnosticStatus: 'not established',
-    },
-    {
-      summary: 'Summary',
-      doctor: 'Doctor',
-      date: 'Date',
-      diagnosticStatus: 'not established',
+          value.diagnosticEstablished
+            ? '<i class="fa-solid fa-check text-green-600"></i> established'
+            : '<i class="fa-solid fa-xmark text-red-600"></i> not established'
+        }</span>`,
     },
   ];
   prescriptionTableColumns: TColumn<Tprescription>[] = [
@@ -141,46 +142,26 @@ export class PatientModalComponent implements OnInit {
   ];
   assessmentTableColumns: TColumn<Tassessment>[] = [
     {
-      key: 'assessment',
-      label: 'Assessment',
+      key: 'id',
+      label: 'Assessment ID',
     },
     {
-      key: 'doctor',
-      label: 'Doctor',
+      key: 'Type',
+      label: 'Assessment Type',
     },
     {
-      key: 'date',
+      key: 'Date',
       label: 'Date',
     },
     {
-      key: 'status',
+      key: 'Laborantin',
       label: 'Status',
       render: (value: Tassessment) =>
         `<span>${
-          value.status === 'valid'
-            ? '<i class="fa-solid fa-check text-green-600"></i>'
-            : '<i class="fa-solid fa-xmark text-red-600"></i>'
-        } ${value.status}</span>`,
-    },
-  ];
-  assessmentTableData: Tassessment[] = [
-    {
-      assessment: 'Assessment',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'valid',
-    },
-    {
-      assessment: 'Assessment',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'not valid',
-    },
-    {
-      assessment: 'Assessment',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'not valid',
+          value.Laborantin || value.RadiologistName
+            ? '<i class="fa-solid fa-check text-green-600"></i> valid'
+            : '<i class="fa-solid fa-xmark text-red-600"></i> not valid'
+        }</span>`,
     },
   ];
 

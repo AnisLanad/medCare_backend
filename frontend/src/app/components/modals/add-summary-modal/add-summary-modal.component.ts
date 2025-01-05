@@ -9,6 +9,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { AddPrescriptionModalService } from '../../../services/add-prescription-modal.service';
+import { Tpatient } from '../../../types/patient.type';
+import { SearchedPatientService } from '../../../services/SearchedPatient/searched-patient.service';
+import { SummaryService } from '../../../services/summaryService/summary.service';
 
 @Component({
   selector: 'app-add-summary-modal',
@@ -19,15 +22,18 @@ import { AddPrescriptionModalService } from '../../../services/add-prescription-
 })
 export class AddSummaryModalComponent {
   isOpen = false;
+  patient: Tpatient | null = null;
   constructor(
     private addSummaryModalService: AddSummaryModalService,
     private fb: FormBuilder,
-    private addPrescriptionModalService: AddPrescriptionModalService
+    private addPrescriptionModalService: AddPrescriptionModalService,
+    private summaryService: SummaryService,
+    private searchedPatientService: SearchedPatientService
   ) {
     this.summaryForm = this.fb.group({
-      symptoms: ['', [Validators.required, Validators.minLength(5)]],
+      PatientSymptoms: ['', [Validators.required, Validators.minLength(5)]],
       measure: ['', [Validators.required, Validators.minLength(2)]],
-      value: [0, [Validators.required, Validators.min(0)]],
+      measureValue: [0, [Validators.required, Validators.min(0)]],
       diagnosticEstablished: [false],
       patientHistory: ['', [Validators.required, Validators.minLength(5)]],
       nextConsultation: ['', [Validators.required]],
@@ -65,6 +71,9 @@ export class AddSummaryModalComponent {
     this.addSummaryModalService.isAddSummaryModalOpen$.subscribe((isOpen) => {
       this.isOpen = isOpen;
     });
+    this.searchedPatientService.SearchedPatient$.subscribe((patient) => {
+      this.patient = patient;
+    });
   }
   closeModal() {
     this.addSummaryModalService.closeModal();
@@ -72,7 +81,16 @@ export class AddSummaryModalComponent {
 
   onSubmit() {
     if (this.summaryForm.valid) {
-      console.log('Form submitted:', this.summaryForm.value);
+      const data = {
+        ...this.summaryForm.value,
+        Patient: this.patient?.DPI_ID,
+        Medecin: 2,
+        Motif: 'General consultation',
+      };
+      console.log('Form submitted:', data);
+      this.summaryService
+        .addSummary(data)
+        .subscribe((data) => console.log(data));
     }
   }
 }

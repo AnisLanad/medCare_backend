@@ -28,13 +28,16 @@
     <form class="space-y-6" [formGroup]="summaryForm" (ngSubmit)="onSubmit()">
       <!-- Patient's Symptoms -->
       <div>
-        <label for="symptoms" class="block text-sm font-medium text-gray-700">
+        <label
+          for="PatientSymptoms"
+          class="block text-sm font-medium text-gray-700"
+        >
           Patient's Symptoms
         </label>
         <textarea
-          id="symptoms"
-          name="symptoms"
-          formControlName="symptoms"
+          id="PatientSymptoms"
+          name="PatientSymptoms"
+          formControlName="PatientSymptoms"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           placeholder="Enter symptoms"
           rows="3"
@@ -89,14 +92,17 @@
           </ul>
         </div>
         <div>
-          <label for="value" class="block text-sm font-medium text-gray-700">
+          <label
+            for="measureValue"
+            class="block text-sm font-medium text-gray-700"
+          >
             Value
           </label>
 
           <input
-            id="value"
-            name="value"
-            formControlName="value"
+            id="measureValue"
+            name="measureValue"
+            formControlName="measureValue"
             type="number"
             min="0"
             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"

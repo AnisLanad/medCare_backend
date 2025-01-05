@@ -31,8 +31,14 @@
         (scanError)="onError($event)"
       >
       </zxing-scanner>
+      <div
+        *ngIf="searchData.isLoading"
+        class="flex justify-center items-center mt-4"
+      >
+        <div
+          class="w-10 h-10 border-t-4 border-blue-500 border-solid rounded-full animate-spin"
+        ></div>
+      </div>
     </div>
-
-    <p>{{ scanResult }}</p>
   </div>
 </div>

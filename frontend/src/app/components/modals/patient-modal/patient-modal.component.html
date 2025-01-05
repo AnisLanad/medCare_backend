@@ -30,8 +30,10 @@
           alt="Patient Picture"
         />
         <div>
-          <h2 class="text-xl font-semibold">Ahcen Chabbi</h2>
-          <p class="text-gray-500">Something about the patient</p>
+          <h2 class="text-xl font-semibold">
+            {{ patient?.Nom + " " + patient?.Prenom }}
+          </h2>
+          <p class="text-gray-500">{{ patient?.Email }}</p>
         </div>
       </div>
       <!-- (click)="messagePatient(patient.id)" -->
@@ -52,7 +54,7 @@
       <ng-container *ngIf="activeTab.key === 'summary'">
         <app-dynamic-table
           [columns]="summaryTableColumns"
-          [data]="summaryTableData"
+          [data]="patientSummary"
           [action]="summaryAction"
         />
       </ng-container>
@@ -66,7 +68,7 @@
       <ng-container *ngIf="activeTab.key === 'assessment'">
         <app-dynamic-table
           [columns]="assessmentTableColumns"
-          [data]="assessmentTableData"
+          [data]="patientAssessments"
           [action]="assessmentAction"
         />
       </ng-container>

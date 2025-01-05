@@ -1,6 +1,11 @@
 export type Tassessment = {
-  assessment: string;
-  doctor: string;
-  date: string;
-  status: string;
+  id: number;
+  Date: string;
+  Informations: string;
+  Laborantin: number | null;
+  Medecin: number;
+  Patient: number;
+  RadiologistName: string | null;
+  Rapport: string | null;
+  Type: string;
 };
