@@ -54,17 +54,32 @@ class Laborantin(models.Model):
 
 class Consultation(models.Model):
     Consultation_ID = models.AutoField(primary_key=True)
-    Patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="consultations")  
-    #foreignekey dis qune consultation peut avoir un patient, et un patient peut avoire plusiuer consultation, et 2eme argument dit si on supprime un patient, on supprime aussi ses consultations
-    #3eme argument dis qu'on peut acceder a la liste des consultations d'un patient en utilisant patient.consultations
-    Medecin = models.ForeignKey(Medecin,on_delete=models.CASCADE, related_name="consultations")
-    Motif = models.TextField()
-    Datecons = models.DateField(auto_now=True)
-    Diagnostic = models.TextField()
-    
+    Patient = models.ForeignKey(
+        Patient, 
+        on_delete=models.CASCADE, 
+        related_name="consultations"
+    )
+    PatientSymptoms = models.TextField(default="No symptoms reported")  # Default text for patient symptoms
+    measure = models.TextField(default="N/A")  # Default text for measurement name
+    measureValue = models.FloatField(default=0.0)  # Default measurement value
+    diagnosticEstablished = models.BooleanField(default=False)  # Default diagnostic status
+    patientHistory = models.TextField(default="No previous history")  # Default text for patient history
+    Datecons = models.DateField(auto_now=True)  # Automatically set to the current date
+    nextConsultation = models.DateField(null=True, blank=True)  # Can be set later, no default
+    Medecin = models.ForeignKey(
+        Medecin, 
+        on_delete=models.CASCADE, 
+        related_name="consultations"
+    )
+    Motif = models.TextField(default="General consultation")  # Default consultation reason
+    diagnostic = models.TextField(default="Pending")  # Default diagnostic result
+
     def __str__(self):
-       return f"Consultation faite par Dr{self.Medecin} pour{self.Patient} "
-    
+       return f"Consultation faite par Dr {self.Medecin} pour {self.Patient}"
+
+
+
+
 
 
 class Certificat(models.Model):
@@ -100,6 +115,8 @@ class Ordonnance(models.Model):
      Consultation = models.ForeignKey(Consultation , on_delete=models.CASCADE , related_name="ordonnances")
      Medicaments = models.ManyToManyField(Medicament, through='OrdonnanceMedicament', related_name="ordonnances")
      Description = models.TextField()
+     Date = models.DateField(auto_now=True)
+     Valid = models.BooleanField(default=False)
      
 
      def __str__(self):
@@ -124,16 +141,22 @@ class Soininfirmier(models.Model):
           return f"{self.Infirmier.Nom} pour {self.Patient.Nom}"        
      
 class Bilan(models.Model):
-         Medecin =    models.ForeignKey(Medecin, on_delete=models.CASCADE, related_name="bilan")   
-         Patient  =   models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="bilan")
-         Laborantin =  models.ForeignKey(Laborantin, on_delete=models.CASCADE, related_name="bilan")
-         Rapport =  models.TextField()
-         Date = models.DateField(auto_now=True)
-         
-         def __str__(self):
-            return f"Bilan par Dr{self.Medecin.Nom} pour {self.Patient.Nom}  "
-              
-      
+    Medecin = models.ForeignKey(Medecin, on_delete=models.CASCADE, related_name="bilan")
+    RadiologistName = models.TextField(null=True, blank=True)
+    Laborantin = models.ForeignKey(Laborantin, on_delete=models.CASCADE, related_name="bilan_laborantin", null=True, blank=True)
+    Patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="bilan")
+    Rapport = models.TextField(null=True,blank=True)
+    Date = models.DateField(auto_now=True)
+    Type = models.TextField()
+    Informations = models.TextField()
+
+
+    def __str__(self):
+        return f"Bilan par Dr {self.Medecin.Nom} pour {self.Patient.Nom}"
+
+
+
+
 class Image(models.Model):
         Titre = models.TextField()
         Image = models.TextField()

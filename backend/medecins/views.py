@@ -62,6 +62,19 @@ class ConsultationViewSet(viewsets.ModelViewSet):
     search_fields = ['Motif', 'Diagnostic']
     ordering_fields = ['Datecons']
 
+    @action(detail=True, methods=['get'])
+    def by_patient(self, request, pk=None):
+        """
+        Custom action to get all ordonnances of a specific patient.
+        The `pk` here is the ID of the patient.
+        """
+        try:
+            patient = Patient.objects.get(pk=pk)  # Get the patient by primary key
+            ordonnances = Ordonnance.objects.filter(Consultation__Patient=patient)  # Filter by patient
+            serializer = self.get_serializer(ordonnances, many=True)
+            return Response(serializer.data)
+        except Patient.DoesNotExist:
+            return Response({"error": "Patient not found"}, status=404)
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return ConsultationDetailSerializer

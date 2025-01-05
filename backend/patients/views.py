@@ -9,7 +9,7 @@ class PatientViewSet(viewsets.ModelViewSet):  #viewset permet de definir les act
     queryset = Patient.objects.all()   #had le viewset effectue ses actons sur tout les objets de la base de donné
     serializer_class = PatientSerializer    #c'est le serializer qui transforme les objets en forma JSON:API
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]  #Ces filtres te permettent d'ajouter des fonctionnalités de filtrage, de recherche et de tri dans les requêtes API
-    filterset_fields = ['Mutuelle']
+    filterset_fields = ['NSS', 'Mutuelle']
     search_fields = ['Nom', 'Prenom', 'NSS', 'Telephone']
     ordering_fields = ['Nom', 'Prenom', 'DateNaissance', 'DateMaj']
 

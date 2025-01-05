@@ -16,7 +16,7 @@ class Patient(models.Model):
     DateNaissance = models.DateField()
     Adresse = models.CharField(max_length=100)
     Telephone = models.CharField(max_length=15)
-    NSS  = models.CharField(max_length=20)
+    NSS  = models.CharField(unique=True,max_length=20,db_index=True)
     Email = models.EmailField(null=True)
     
     Mutuelle = models.CharField(

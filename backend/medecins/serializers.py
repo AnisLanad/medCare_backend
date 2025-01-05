@@ -44,10 +44,27 @@ class LaborantinSerializer(serializers.ModelSerializer):
         model = Laborantin
         fields = ['id', 'Nom', 'Prenom', 'Telephone', 'Email']
 
+from rest_framework import serializers
+from .models import Consultation
+
 class ConsultationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consultation
-        fields = ['Consultation_ID', 'Patient', 'Medecin', 'Motif', 'Datecons', 'Diagnostic']
+        fields = [
+            "Consultation_ID",
+            "Patient",
+            "PatientSymptoms",
+            "measure",
+            "measureValue",
+            "diagnosticEstablished",
+            "patientHistory",
+            "Datecons",
+            "nextConsultation",
+            "Medecin",
+            "Motif",
+            "diagnostic",
+        ]
+
 
 class CertificatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,8 +91,12 @@ class OrdonnanceSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ordonnance
-        fields = ['id', 'Consultation', 'Medicaments', 'Description', 'ordonnance_medicaments']
-
+        fields = ['id', 'Consultation', 'Medicaments', 'Description', 'ordonnance_medicaments','Patient']
+    def get_Patient(self, obj):
+        # Retrieve the Patient through the related Consultation model
+        return {
+            "id": obj.Consultation.Patient.id,
+        }
 class SoininfirmierSerializer(serializers.ModelSerializer):
     infirmier_nom_complet = serializers.SerializerMethodField()
     patient_nom_complet = serializers.SerializerMethodField()
@@ -97,11 +118,19 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'Titre', 'Image', 'Bilan']
 
 class BilanSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, read_only=True, source='image')
-    
     class Meta:
         model = Bilan
-        fields = ['id', 'Medecin', 'Patient', 'Laborantin', 'Rapport', 'Date', 'images']
+        fields = [
+            'id', 
+            'Medecin',
+            'RadiologistName',
+            'Laborantin',
+            'Patient',
+            'Rapport',
+            'Date',
+            'Type',
+            'Informations'
+        ]
 
 # Serializer imbriqué pour les consultations détaillées
 class ConsultationDetailSerializer(ConsultationSerializer):

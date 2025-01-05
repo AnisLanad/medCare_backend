@@ -103,7 +103,7 @@ DATABASES = {
         'ENGINE': config('ENGINE', default='django.db.backends.mysql'),
         'NAME': config('NAME', default='medcare_db'),
         'USER': config('USER', default='root'),
-        'PASSWORD': config('PASSWORD', default='2608004'),
+        'PASSWORD': config('PASSWORD', default='hcen123456789'),
         'HOST': config('HOST', default='localhost'),
         'PORT': config('PORT', default='3306'),
         'TEST': {
@@ -186,4 +186,4 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
 }
 
-AUTH_USER_MODEL = 'medecins.CustomUser'
+# AUTH_USER_MODEL = 'medecins.CustomUser'
