@@ -1,0 +1,277 @@
+<div
+  *ngIf="isOpen"
+  id="modal"
+  aria-labelledby="modal-title"
+  role="dialog"
+  [@fadeInOut]="isOpen"
+  class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl p-4 sm:p-8 relative overflow-y-auto max-h-[95vh] modal-scrollbar"
+    role="dialog"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <button
+      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+    <h2
+      id="modal-title"
+      class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6"
+    >
+      Lab Results
+    </h2>
+    <!-- form -->
+    <form
+      class="space-y-6"
+      [formGroup]="prescriptionForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- Personal Information -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label
+            for="blood-pressure"
+            class="block text-sm font-medium text-gray-600"
+          >
+            Blood pressure
+          </label>
+          <input
+            id="blood-pressure"
+            type="number"
+            name="blood_pressure"
+            formControlName="blood_pressure"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('blood_pressure')?.invalid &&
+              prescriptionForm.get('blood_pressure')?.touched
+            "
+          ></div>
+        </div>
+        <div>
+          <label
+            for="blood_sugar"
+            class="block text-sm font-medium text-gray-600"
+          >
+            Blood sugar
+          </label>
+          <input
+            id="blood_sugar"
+            type="number"
+            name="blood_sugar"
+            formControlName="blood_sugar"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('blood_sugar')?.invalid &&
+              prescriptionForm.get('blood_sugar')?.touched
+            "
+          ></div>
+        </div>
+        
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label
+            for="cholesterol"
+            class="block text-sm font-medium text-gray-600"
+          >
+            Cholesterol
+          </label>
+          <input
+            id="cholesterol"
+            type="number"
+            min="1"
+            max="120"
+            name="age"
+            formControlName="cholesterol"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('cholesterol')?.invalid &&
+              prescriptionForm.get('cholesterol')?.touched
+            "
+          ></div>
+        </div>
+        <div>
+          <label for="Na" class="block text-sm font-medium text-gray-600">
+            Na
+          </label>
+          <input
+            id="Na"
+            type="number"
+            name="Na"
+            formControlName="Na"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('Na')?.invalid &&
+              prescriptionForm.get('Na')?.touched
+            "
+          ></div>
+        </div>
+        <div>
+          <label
+            for="hemoglobine"
+            class="block text-sm font-medium text-gray-600"
+          >
+            Hemoglobine
+          </label>
+          <input
+            id="hemoglobine"
+            type="number"
+            name="hemoglobine"
+            formControlName="hemoglobine"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('hemoglobine')?.invalid &&
+              prescriptionForm.get('hemoglobine')?.touched
+            "
+          ></div>
+        </div>
+        <div>
+          <label for="iron" class="block text-sm font-medium text-gray-600">
+            Iron
+          </label>
+          <input
+            id="iron"
+            type="number"
+            name="iron"
+            formControlName="iron"
+            class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <div
+            class="text-sm text-red-600 mt-1"
+            *ngIf="
+              prescriptionForm.get('iron')?.invalid &&
+              prescriptionForm.get('iron')?.touched
+            "
+          ></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <input
+            id="generate_graph"
+            name="generate_graph"
+            formControlName="generate_graph"
+            type="checkbox"
+            class="rounded border-gray-300 text-blue-500 focus:ring-2 focus:ring-blue-500"
+          />
+          <label for="generate_graph" class="text-sm text-gray-700">
+            Generate Graph
+          </label>
+        </div>
+      </div>
+
+      <!-- Date Signed -->
+      <div>
+        <label
+          for="date-signed"
+          class="block text-sm font-medium text-gray-600"
+        >
+          Date Signed
+        </label>
+        <input
+          id="date-signed"
+          type="date"
+          name="dateSigned"
+          formControlName="dateSigned"
+          class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            prescriptionForm.get('dateSigned')?.invalid &&
+            prescriptionForm.get('dateSigned')?.touched
+          "
+        >
+          Date signed is required.
+        </div>
+      </div>
+
+      <!-- Doctor's Signature -->
+      <div>
+        <label for="signature" class="block text-sm font-medium text-gray-600">
+          Doctor's Signature
+        </label>
+        <div
+          *ngIf="!isSignaturePadOpen && !signatureUrl"
+          class="flex items-center justify-between p-4 border rounded-lg bg-gray-50"
+        >
+          <div class="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 text-gray-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16 6h.01M3.23 8.21l9.62 9.62a1 1 0 00.71.29h5.06a1 1 0 001-1v-5.06a1 1 0 00-.29-.71l-9.62-9.62a1 1 0 00-1.42 0l-5.06 5.06a1 1 0 000 1.42z"
+              />
+            </svg>
+            <span class="text-sm text-gray-500"> No signature added </span>
+          </div>
+          <button
+            (click)="openSignaturePad()"
+            type="button"
+            class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          >
+            Sign
+          </button>
+        </div>
+        <ng-container *ngIf="isSignaturePadOpen">
+          <app-signature-pad
+            (onSaveSignature)="saveSignature($event)"
+          ></app-signature-pad>
+        </ng-container>
+        <div *ngIf="signatureUrl" class="relative">
+          <button
+            (click)="removeSignature()"
+            type="button"
+            title="Remove signature"
+            class="absolute top-2 right-2 text-lg font-medium text-red-600 hover:text-red-800 focus:outline-none"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+          <img [src]="signatureUrl" alt="Signature" class="w-full" />
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between">
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="px-6 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

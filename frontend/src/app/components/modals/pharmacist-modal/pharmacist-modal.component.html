@@ -1,0 +1,96 @@
+<div
+  *ngIf="isOpen"
+  id="modal"
+  aria-labelledby="modal-title"
+  role="dialog"
+  [@fadeInOut]="isOpen"
+  class="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl p-8 relative"
+    role="dialog"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <!-- Close Button -->
+    <button
+      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <h2
+      id="modal-title"
+      class="text-2xl font-bold text-gray-800 text-center mb-6"
+    >
+      Prescription Information
+    </h2>
+
+    <!-- Modal Body -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Doctor's First Name</label>
+      <input
+        type="text"
+        [value]="patientInfo.doctorFirstName"
+        class="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 outline-none"
+        readonly
+      />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Doctor's Last Name</label>
+      <input
+        type="text"
+        [value]="patientInfo.doctorLastName"
+        class="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 outline-none"
+        readonly
+      />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Patient's First Name</label>
+      <input
+        type="text"
+        [value]="patientInfo.patientFirstName"
+        class="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 outline-none"
+        readonly
+      />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Patient's Last Name</label>
+      <input
+        type="text"
+        [value]="patientInfo.patientLastName"
+        class="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 outline-none"
+        readonly
+      />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Treatment</label>
+      <input
+        type="text"
+        [value]="patientInfo.treatment"
+        class="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 outline-none"
+        readonly
+      />
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-center space-x-4">
+      <button
+        type="button"
+        (click)="handleAction(false)"
+        class="px-6 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition-all duration-300 ease-in-out"
+      >
+        Refuse
+      </button>
+      <button
+        type="button"
+        (click)="handleAction(true)"
+        class="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
+      >
+        Validate
+      </button>
+    </div>
+  </div>
+</div>

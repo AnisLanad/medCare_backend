@@ -1,0 +1,128 @@
+<div
+  *ngIf="isOpen"
+  id="modal"
+  aria-labelledby="modal-title"
+  role="dialog"
+  [@fadeInOut]="isOpen"
+  class="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl p-4 sm:p-8 relative overflow-y-auto max-h-[95vh] modal-scrollbar"
+    role="dialog"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <button
+      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+    <h2
+      id="modal-title"
+      class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6"
+    >
+      Add Summary
+    </h2>
+
+    <form class="space-y-6" [formGroup]="summaryForm" (ngSubmit)="onSubmit()">
+      <!-- Dropdown for Summary -->
+      <div>
+        <label for="summary" class="block text-sm font-medium text-gray-700">
+          Select Summary
+        </label>
+        <select
+          id="summary"
+          name="summary"
+          formControlName="summary"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          <option value="" disabled selected>Select a summary</option>
+          <option *ngFor="let option of summaryOptions" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            summaryForm.get('summary')?.invalid &&
+            summaryForm.get('summary')?.touched
+          "
+        >
+          Summary is required.
+        </div>
+      </div>
+
+      <!-- Patient's Symptoms -->
+      <div>
+        <label
+          for="observation"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Observation
+        </label>
+        <textarea
+          id="observation"
+          name="observation"
+          formControlName="observation"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter observation"
+          rows="3"
+        ></textarea>
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            summaryForm.get('observation')?.invalid &&
+            summaryForm.get('observation')?.touched
+          "
+        >
+          Observation must be at least 5 characters.
+        </div>
+      </div>
+
+      <!-- Diagnostic -->
+      <div>
+        <label
+          for="medications"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Medications
+        </label>
+        <textarea
+          id="medications"
+          name="medications"
+          formControlName="medications"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter medications"
+          rows="3"
+        ></textarea>
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            summaryForm.get('medications')?.invalid &&
+            summaryForm.get('medications')?.touched
+          "
+        >
+          Medication must be at least 5 characters.
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end space-x-4">
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
