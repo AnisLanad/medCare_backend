@@ -61,7 +61,7 @@
       <ng-container *ngIf="activeTab.key === 'prescription'">
         <app-dynamic-table
           [columns]="prescriptionTableColumns"
-          [data]="prescriptionTableData"
+          [data]="patientPrescriptions"
           [action]="prescriptionAction"
         />
       </ng-container>

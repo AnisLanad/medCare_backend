@@ -1,18 +1,13 @@
 import { Component } from '@angular/core';
-import {LabSearchHeaderComponent} from '@app/components/Header-dashboard/searchHeader-lab.component';
-import {LabListComponent} from '@app/components/patient-list/lab-list.component';
-import {NurseListComponent} from '@app/components/patient-list/nurse-list.component';
-import {NurseSearchHeaderComponent} from '@app/components/Header-dashboard/searchHeader-nurse.component';
+import { LabSearchHeaderComponent } from '@app/components/Header-dashboard/searchHeader-lab.component';
+import { LabListComponent } from '@app/components/patient-list/lab-list.component';
+import { NurseListComponent } from '@app/components/patient-list/nurse-list.component';
+import { NurseSearchHeaderComponent } from '@app/components/Header-dashboard/searchHeader-nurse.component';
 
 @Component({
   selector: 'app-nurse',
   standalone: true,
-  imports: [
-    LabSearchHeaderComponent,
-    LabListComponent,
-    NurseListComponent,
-    NurseSearchHeaderComponent
-  ],
+  imports: [NurseListComponent, NurseSearchHeaderComponent],
   template: `
     <div class="p-6">
       <app-nurse-search-header></app-nurse-search-header>
@@ -22,6 +17,6 @@ import {NurseSearchHeaderComponent} from '@app/components/Header-dashboard/searc
         <app-nurse-list></app-nurse-list>
       </div>
     </div>
-  `
+  `,
 })
 export class NurseComponent {}

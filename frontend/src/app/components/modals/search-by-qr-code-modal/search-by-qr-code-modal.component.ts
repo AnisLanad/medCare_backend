@@ -11,6 +11,10 @@ import { SearchedPatientService } from '../../../services/SearchedPatient/search
 import { PatientModalService } from '../../../services/patient-modal.service';
 import { SummaryService } from '../../../services/summaryService/summary.service';
 import { AssessmentService } from '../../../services/AssessmentService/assessment.service';
+import { PrescriptionService } from '@app/services/Prescription/prescription.service';
+import { Tsummary } from '@app/types/summary.type';
+import { Tassessment } from '@app/types/assessment.type';
+import { Tprescription } from '@app/types/prescription.type';
 @Component({
   selector: 'app-search-by-qr-code-modal',
   imports: [ZXingScannerModule, CommonModule],
@@ -26,7 +30,8 @@ export class SearchByQrCodeModalComponent implements OnInit {
     private searchedPatientService: SearchedPatientService,
     private patientModalService: PatientModalService,
     private summaryService: SummaryService,
-    private assessmentService: AssessmentService
+    private assessmentService: AssessmentService,
+    private prescriptionService: PrescriptionService
   ) {}
   ngOnInit(): void {
     this.searchByQrCodeModalService.isSearchByQrCodeModalOpen$.subscribe(
@@ -53,12 +58,21 @@ export class SearchByQrCodeModalComponent implements OnInit {
           this.summaryService
             .getPatientSummaries(data[0].DPI_ID)
             .subscribe((data) => {
-              this.searchedPatientService.setPatientSummary(data);
+              this.searchedPatientService.setPatientSummary(data as Tsummary[]);
             });
           this.assessmentService
             .getPatientAssessments(data[0].DPI_ID)
             .subscribe((data) => {
-              this.searchedPatientService.setPatientAssessments(data);
+              this.searchedPatientService.setPatientAssessments(
+                data as Tassessment[]
+              );
+            });
+          this.prescriptionService
+            .getPatientPrescriptions(data[0].DPI_ID)
+            .subscribe((data) => {
+              this.searchedPatientService.setPatientPrescriptions(
+                data as Tprescription[]
+              );
             });
           this.patientModalService.openModal();
         } else {

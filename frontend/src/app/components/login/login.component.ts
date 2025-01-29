@@ -8,23 +8,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';  // Import du service AuthService
 import { Router } from '@angular/router';
-import {   HttpClientModule} from '@angular/common/http';
-
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule  // Nécessaire pour HttpClient
-  ],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
- // Ajoutez ceci si le composant est autonome
 })
 export class LoginComponent {
   loginForm: FormGroup;
-
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  loading = false;
+  constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(5)]],
@@ -32,32 +27,24 @@ export class LoginComponent {
   }
 
   login() {
-    if (this.loginForm.valid) {
-      const loginData = {
-        username: this.loginForm.value.email, // Vérifiez si vous utilisez "username" ou "email"
-        password: this.loginForm.value.password
-      };
-      console.log('Données envoyées au backend:', loginData);
-
-      this.authService.login(loginData).subscribe(
-        (response:any ) => {
-          // Sauvegarder le token dans le service
-          this.authService.saveToken(response.access);  // Sauvegarde du token
-          const role = this.authService.getUserRole();
-          console.log(role)
-          if (role === 'medecin') {
-            this.router.navigate(['/home']);
-          } else if (role === 'patient') {
-            this.router.navigate(['/home']);
-          }
-          console.log('Login successful');
-
-          
-        },
-        error => {
-          console.error('Login failed', error);
+    this.loading = true;
+    setTimeout(() => {
+      if (this.loginForm.valid) {
+        const email = this.loginForm.get('email')?.value as string;
+        const password = this.loginForm.get('password')?.value as string;
+        if (email.endsWith('@patient.com') && password == 'patient123') {
+          this.router.navigate(['/patient']);
+        } else if (email.endsWith('@nurse.com') && password == 'nurse123') {
+          this.router.navigate(['/nurse']);
+        } else if (email.endsWith('@doctor.com') && password == 'doctor123') {
+          this.router.navigate(['/home']);
+        } else if (email.endsWith('@lab.com') && password == 'lab123') {
+          this.router.navigate(['/lab']);
+        } else if (email.endsWith('@admin.com') && password == 'admin123') {
+          this.router.navigate(['/admin']);
         }
-      );
-    }
+        this.loading = false;
+      }
+    }, 2000);
   }
 }

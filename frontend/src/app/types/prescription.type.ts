@@ -1,6 +1,22 @@
+type medicament_details = {
+  id: number;
+  Nom: string;
+  Dosage: string;
+  Fabricant: string;
+  Forme: string;
+  forme_display: string;
+};
+type medicament = {
+  id: number;
+  Ordonnance: number;
+  Medicament: number;
+  medicament_details: medicament_details;
+  Posologie: string;
+};
 export type Tprescription = {
-  ordonnance: string;
-  doctor: string;
-  date: string;
-  status: string;
+  id: number;
+  Consultation: number;
+  Medicaments: number[];
+  Description: string;
+  ordonnance_medicaments: medicament[];
 };

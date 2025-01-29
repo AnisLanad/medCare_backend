@@ -215,6 +215,7 @@ export class AddPrescriptionModalComponent implements OnInit {
                 .subscribe((data) => console.log(data));
             });
         });
+      this.closeModal();
     }
   }
   saveSignature(signatureUrl: string) {

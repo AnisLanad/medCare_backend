@@ -95,8 +95,9 @@ export class AddSummaryModalComponent {
       this.summaryService.addSummary(data).subscribe((data) => {
         this.searchedPatientService.setPatientSummary([
           ...this.patientSummary,
-          data,
+          data as Tsummary,
         ]);
+        this.closeModal();
       });
     }
   }

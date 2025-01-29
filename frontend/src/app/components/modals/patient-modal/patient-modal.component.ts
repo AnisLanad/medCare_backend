@@ -24,6 +24,7 @@ export class PatientModalComponent implements OnInit {
   patient: Tpatient | null = null;
   patientSummary: Tsummary[] = [];
   patientAssessments: any = [];
+  patientPrescriptions: Tprescription[] = [];
   tabs: Ttab[] = [
     {
       key: 'summary',
@@ -62,6 +63,11 @@ export class PatientModalComponent implements OnInit {
         this.patientAssessments = patientAssessments;
       }
     );
+    this.searchedPatientService.patientPrescriptions$.subscribe(
+      (patientPrescriptions) => {
+        this.patientPrescriptions = patientPrescriptions;
+      }
+    );
   }
   closeModal() {
     this.patientModalService.closeModal();
@@ -92,52 +98,16 @@ export class PatientModalComponent implements OnInit {
   ];
   prescriptionTableColumns: TColumn<Tprescription>[] = [
     {
-      key: 'ordonnance',
-      label: 'Ordonnance',
+      key: 'id',
+      label: 'Ordonnance ID',
     },
     {
-      key: 'doctor',
-      label: 'Doctor',
+      key: 'Consultation',
+      label: 'Consultation ID',
     },
     {
-      key: 'date',
-      label: 'Date',
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (value: Tprescription) =>
-        `<span>${
-          value.status === 'valid'
-            ? '<i class="fa-solid fa-check text-green-600"></i>'
-            : '<i class="fa-solid fa-xmark text-red-600"></i>'
-        } ${value.status}</span>`,
-    },
-  ];
-  prescriptionTableData: Tprescription[] = [
-    {
-      ordonnance: 'Ordonnance',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'valid',
-    },
-    {
-      ordonnance: 'Ordonnance',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'not valid',
-    },
-    {
-      ordonnance: 'Ordonnance',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'not valid',
-    },
-    {
-      ordonnance: 'Ordonnance',
-      doctor: 'Doctor',
-      date: 'Date',
-      status: 'valid',
+      key: 'Description',
+      label: 'Description',
     },
   ];
   assessmentTableColumns: TColumn<Tassessment>[] = [

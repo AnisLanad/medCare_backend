@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MedicalRecordModalService } from '../../../services/medical-record-modal.service';
 import { CommonModule } from '@angular/common';
 import { fadeInOut } from '../../../animations/animations';
+import { Tpatient } from '@app/types/patient.type';
+import { Tsummary } from '@app/types/summary.type';
+import { Tassessment } from '@app/types/assessment.type';
+import { Tprescription } from '@app/types/prescription.type';
 
 @Component({
   selector: 'app-medical-record-modal',
@@ -11,6 +15,10 @@ import { fadeInOut } from '../../../animations/animations';
   animations: [fadeInOut],
 })
 export class MedicalRecordModalComponent implements OnInit {
+  @Input() patient: Tpatient | null = null;
+  @Input() patientSummary: Tsummary[] = [];
+  @Input() patientAssessments: Tassessment[] = [];
+  @Input() patientPrescriptions: Tprescription[] = [];
   constructor(private medicalRecordModalService: MedicalRecordModalService) {}
   isOpen = false;
   ngOnInit(): void {
@@ -24,29 +32,10 @@ export class MedicalRecordModalComponent implements OnInit {
     this.medicalRecordModalService.closeModal();
   }
 
-  patient = {
-    name: 'John Doe',
-    socialSecurityNumber: '123-45-6789',
-    dateOfBirth: '1990-01-01',
-    address: '123 Main St, Springfield',
-    phone: '+1-555-123-4567',
-    insurance: 'HealthCare Plus',
-    doctor: 'Dr. Emily Smith',
-    contactPerson: 'Jane Doe (+1-555-987-6543)',
-  };
-
   medicalHistory = ['Hypertension', 'Type 2 Diabetes', 'Appendectomy (2015)'];
 
   prescriptions = [
     { name: 'Metformin', dose: '500mg', duration: '30 days' },
     { name: 'Amlodipine', dose: '10mg', duration: '15 days' },
   ];
-
-  testResults = [
-    { type: 'Blood Test', result: 'Normal', date: '2024-12-20' },
-    { type: 'X-Ray', result: 'No abnormalities', date: '2024-12-22' },
-  ];
-
-  consultationSummary =
-    'Patient is responding well to the current medication. Advised to maintain a balanced diet and regular exercise.';
 }

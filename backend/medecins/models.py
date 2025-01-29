@@ -115,7 +115,7 @@ class Ordonnance(models.Model):
      Consultation = models.ForeignKey(Consultation , on_delete=models.CASCADE , related_name="ordonnances")
      Medicaments = models.ManyToManyField(Medicament, through='OrdonnanceMedicament', related_name="ordonnances")
      Description = models.TextField()
-     Date = models.DateField(auto_now=True)
+     Date = models.DateField(auto_now_add=True)
      Valid = models.BooleanField(default=False)
      
 

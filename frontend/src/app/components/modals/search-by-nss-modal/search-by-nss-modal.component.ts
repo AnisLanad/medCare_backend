@@ -17,6 +17,9 @@ import { PatientModalService } from '../../../services/patient-modal.service';
 import { SummaryService } from '../../../services/summaryService/summary.service';
 import { AssessmentService } from '../../../services/AssessmentService/assessment.service';
 import { PrescriptionService } from '../../../services/Prescription/prescription.service';
+import { Tsummary } from '@app/types/summary.type';
+import { Tassessment } from '@app/types/assessment.type';
+import { Tprescription } from '@app/types/prescription.type';
 
 @Component({
   selector: 'app-search-by-nss-modal',
@@ -62,17 +65,24 @@ export class SearchByNssModalComponent implements OnInit {
             this.summaryService
               .getPatientSummaries(data[0].DPI_ID)
               .subscribe((data) => {
-                this.searchedPatientService.setPatientSummary(data);
+                this.searchedPatientService.setPatientSummary(
+                  data as Tsummary[]
+                );
               });
             this.assessmentService
               .getPatientAssessments(data[0].DPI_ID)
               .subscribe((data) => {
-                this.searchedPatientService.setPatientAssessments(data);
+                this.searchedPatientService.setPatientAssessments(
+                  data as Tassessment[]
+                );
               });
             this.prescriptionService
               .getPatientPrescriptions(data[0].DPI_ID)
               .subscribe((data) => {
                 console.log(data);
+                this.searchedPatientService.setPatientPrescriptions(
+                  data as Tprescription[]
+                );
               });
             this.patientModalService.openModal();
           } else {

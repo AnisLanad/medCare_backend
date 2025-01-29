@@ -33,19 +33,17 @@
           Personal Information
         </h3>
         <ul class="text-gray-600 space-y-2">
-          <li><strong>Name:</strong> {{ patient.name }}</li>
+          <li>
+            <strong>Name:</strong> {{ patient?.Nom }} {{ patient?.Prenom }}
+          </li>
           <li>
             <strong>Social Security Number:</strong>
-            {{ patient.socialSecurityNumber }}
+            {{ patient?.NSS }}
           </li>
-          <li><strong>Date of Birth:</strong> {{ patient.dateOfBirth }}</li>
-          <li><strong>Address:</strong> {{ patient.address }}</li>
-          <li><strong>Phone:</strong> {{ patient.phone }}</li>
-          <li><strong>Insurance:</strong> {{ patient.insurance }}</li>
-          <li><strong>Doctor:</strong> {{ patient.doctor }}</li>
-          <li>
-            <strong>Emergency Contact:</strong> {{ patient.contactPerson }}
-          </li>
+          <li><strong>Date of Birth:</strong> {{ patient?.DateNaissance }}</li>
+          <li><strong>Email:</strong> {{ patient?.Email }}</li>
+          <li><strong>Phone:</strong> {{ patient?.Telephone }}</li>
+          <li><strong>Age:</strong> {{ patient?.age }}</li>
         </ul>
       </section>
 
@@ -62,37 +60,110 @@
         <h3 class="text-lg font-bold text-gray-800 mb-2">Prescriptions</h3>
         <ul class="space-y-4">
           <li
-            *ngFor="let prescription of prescriptions"
+            *ngFor="let prescription of patientPrescriptions"
             class="bg-blue-50 p-4 rounded-lg"
           >
-            <strong>{{ prescription.name }}</strong> -
-            {{ prescription.dose }} for {{ prescription.duration }}
+            <div class="font-semibold text-gray-700">
+              {{ prescription.Description }}
+            </div>
+
+            <ul class="space-y-2 mt-2">
+              <li
+                *ngFor="let medicament of prescription.ordonnance_medicaments"
+                class="bg-blue-100 p-3 rounded-lg"
+              >
+                <div class="font-bold">
+                  {{ medicament.medicament_details.Nom }}
+                </div>
+                <div><strong>Dosage:</strong> {{ medicament.Posologie }}</div>
+                <div>
+                  <strong>Form:</strong>
+                  {{ medicament.medicament_details.Forme }} ({{
+                    medicament.medicament_details.forme_display
+                  }})
+                </div>
+                <div>
+                  <strong>Manufacturer:</strong>
+                  {{ medicament.medicament_details.Fabricant }}
+                </div>
+              </li>
+            </ul>
           </li>
         </ul>
       </section>
-
-      <!-- Test Results -->
-      <section>
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Test Results</h3>
-        <ul class="space-y-4">
-          <li
-            *ngFor="let test of testResults"
-            class="bg-green-50 p-4 rounded-lg"
-          >
-            <strong>{{ test.type }}</strong
-            >: {{ test.result }} ({{ test.date }})
-          </li>
-        </ul>
-      </section>
-
       <!-- Consultation Summary -->
       <section>
-        <h3 class="text-lg font-bold text-gray-800 mb-2">
-          Consultation Summary
-        </h3>
-        <p class="text-gray-600 bg-yellow-50 p-4 rounded-lg">
-          {{ consultationSummary }}
-        </p>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Assessments</h3>
+        <ul class="space-y-4">
+          <li
+            *ngFor="let assessment of patientAssessments"
+            class="bg-green-50 p-4 rounded-lg"
+          >
+            <div class="font-semibold text-gray-700">
+              Date: {{ assessment.Date }}
+            </div>
+            <div class="mt-2">
+              <strong>Informations:</strong> {{ assessment.Informations }}
+            </div>
+            <div *ngIf="assessment.Laborantin" class="mt-2">
+              <strong>Laborantin:</strong> {{ assessment.Laborantin }}
+            </div>
+            <div class="mt-2">
+              <strong>Medecin:</strong> {{ assessment.Medecin }}
+            </div>
+            <div *ngIf="assessment.RadiologistName" class="mt-2">
+              <strong>Radiologist:</strong> {{ assessment.RadiologistName }}
+            </div>
+            <div *ngIf="assessment.Rapport" class="mt-2">
+              <strong>Report:</strong> {{ assessment.Rapport }}
+            </div>
+            <div class="mt-2"><strong>Type:</strong> {{ assessment.Type }}</div>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Summary</h3>
+        <ul class="space-y-4">
+          <li
+            *ngFor="let summary of patientSummary"
+            class="bg-yellow-50 p-4 rounded-lg"
+          >
+            <div class="font-semibold text-gray-700">
+              Consultation ID: {{ summary.Consultation_ID }}
+            </div>
+            <div class="mt-2">
+              <strong>Date:</strong> {{ summary.Datecons }}
+            </div>
+            <div class="mt-2">
+              <strong>Medecin:</strong> {{ summary.Medecin }}
+            </div>
+            <div class="mt-2"><strong>Motif:</strong> {{ summary.Motif }}</div>
+            <div class="mt-2">
+              <strong>Patient:</strong> {{ summary.Patient }}
+            </div>
+            <div class="mt-2">
+              <strong>Symptoms:</strong> {{ summary.PatientSymptoms }}
+            </div>
+            <div class="mt-2">
+              <strong>Diagnostic:</strong> {{ summary.diagnostic }}
+            </div>
+            <div class="mt-2">
+              <strong>Diagnostic Established:</strong>
+              {{ summary.diagnosticEstablished ? "Yes" : "No" }}
+            </div>
+            <div class="mt-2">
+              <strong>Measure:</strong> {{ summary.measure }}:
+              {{ summary.measureValue }}
+            </div>
+            <div class="mt-2">
+              <strong>Next Consultation:</strong> {{ summary.nextConsultation }}
+            </div>
+            <div class="mt-2">
+              <strong>Patient History:</strong> {{ summary.patientHistory }}
+            </div>
+          </li>
+        </ul>
       </section>
     </div>
   </div>
