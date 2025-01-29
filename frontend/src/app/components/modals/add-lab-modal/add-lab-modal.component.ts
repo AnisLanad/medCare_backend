@@ -23,7 +23,7 @@ export class AddLabModalComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.labReportForm = this.fb.group({
-      generate_graph: [false],
+      generate_graph: [false], 
       blood_pressure: ['', [Validators.maxLength(50)]],
       blood_sugar: ['', [Validators.maxLength(50)]],
       cholesterol: ['', [Validators.max(120)]],
@@ -67,9 +67,9 @@ export class AddLabModalComponent implements OnInit {
       hemoglobine: ['', [Validators.maxLength(15)]],
       iron: ['', [Validators.maxLength(15)]],
       dateSigned: ['', [Validators.required]],
-      // Static patientID and labID (same as backend model)
-      patientID: [30, [Validators.required]],  // Static patientID
-      labID: [40, [Validators.required]],     // Static labID
+      
+      patientID: [30, [Validators.required]],  
+      labID: [40, [Validators.required]],     
     });
   }
 

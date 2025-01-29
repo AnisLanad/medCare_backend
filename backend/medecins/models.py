@@ -133,12 +133,12 @@ class OrdonnanceMedicament(models.Model):
       
   
 class Soininfirmier(models.Model):
-        Infirmier =  models.ForeignKey(Infirmier, on_delete=models.CASCADE, related_name="soininfirmier")
-        Patient  =   models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="soininfirmier")
-        Date = models.DateField(auto_now=True)
+        InfirmierID =  models.IntegerField(default=1)
+        PatientID  =   models.IntegerField()
+        Date = models.DateField()
         Description = models.TextField()
         def __str__(self):
-          return f"{self.Infirmier.Nom} pour {self.Patient.Nom}"        
+          return f"{self.InfirmierID} pour {self.PatientID}"        
      
 class Bilan(models.Model):
     Medecin = models.ForeignKey(Medecin, on_delete=models.CASCADE, related_name="bilan")

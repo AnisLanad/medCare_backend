@@ -80,9 +80,9 @@ class OrdonnanceMedicamentAdmin(admin.ModelAdmin):
 
 @admin.register(Soininfirmier)
 class SoininfirmierAdmin(admin.ModelAdmin):
-    list_display = ('Infirmier', 'Patient', 'Date')
-    list_filter = ('Date', 'Infirmier')
-    search_fields = ('Patient__Nom', 'Description')
+    list_display = ('InfirmierID', 'PatientID', 'Date')
+    list_filter = ('Date', 'InfirmierID')
+    search_fields = ('Description',)
     date_hierarchy = 'Date'
 
 class ImageInline(admin.TabularInline):

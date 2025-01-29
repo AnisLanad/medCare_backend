@@ -7,7 +7,10 @@ from rest_framework.views import APIView
 from patients.models import Patient
 from datetime import date
 
-
+from rest_framework import status
+from .serializers import RadioReportSerializer
+from .models import RadioReport
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
@@ -116,9 +119,15 @@ class OrdonnanceMedicamentViewSet(viewsets.ModelViewSet):
 class SoininfirmierViewSet(viewsets.ModelViewSet):
     queryset = Soininfirmier.objects.all()
     serializer_class = SoininfirmierSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ['Infirmier', 'Patient', 'Date']
-    ordering_fields = ['Date']
+    parser_classes = (MultiPartParser, FormParser) 
+    def create(self, request, *args, **kwargs):
+        print("Received Data:", request.data)  # Debugging
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print("Errors:", serializer.errors)  # Print validation errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 class BilanViewSet(viewsets.ModelViewSet):
     queryset = Bilan.objects.all()
@@ -178,10 +187,7 @@ class GetNbCons (APIView):
                 "patient2" :{ personne2.Nom +" "+ personne2.Prenom} 
                          })
 
-from rest_framework import status
-from .serializers import RadioReportSerializer
-from .models import RadioReport
-from rest_framework.parsers import MultiPartParser, FormParser
+
 
 
 class RadioReportViewSet(viewsets.ModelViewSet):

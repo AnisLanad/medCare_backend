@@ -17,7 +17,7 @@ import { AddSummaryModalComponent } from "../add-nurse-summary-modal/add-nurse-s
   templateUrl: './nurse-patient-modal.component.html',
   styleUrl: './nurse-patient-modal.component.css',
   animations: [fadeInOut],
-})
+}) 
 export class NursePatientModalComponent implements OnInit {
   constructor(
     private patientModalService: NursePatientModalService,
@@ -49,6 +49,7 @@ export class NursePatientModalComponent implements OnInit {
   closeModal() {
     this.patientModalService.closeModal();
   }
+  //*___________________________________________________*//
   summaryTableColumns: TColumn<Tsummary>[] = [
     {
       key: 'summary',
@@ -73,26 +74,7 @@ export class NursePatientModalComponent implements OnInit {
         } ${value.diagnosticStatus}</span>`,
     },
   ];
-  summaryTableData: Tsummary[] = [
-    {
-      summary: 'Summary',
-      doctor: 'Doctor',
-      date: 'Date',
-      diagnosticStatus: 'established',
-    },
-    {
-      summary: 'Summary',
-      doctor: 'Doctor',
-      date: 'Date',
-      diagnosticStatus: 'not established',
-    },
-    {
-      summary: 'Summary',
-      doctor: 'Doctor',
-      date: 'Date',
-      diagnosticStatus: 'not established',
-    },
-  ];
+  summaryTableData: Tsummary[] = [];
 
   summaryAction(data: Tsummary) {
     alert(JSON.stringify(data));

@@ -1,76 +1,71 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AddNurseSummaryService } from '../../../services/add-nurse-summary.service';
 import { NurseDetailsModalService } from '../../../services/add-nurse-summary-modal.service';
-import { fadeInOut } from '../../../animations/animations';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { AddPrescriptionModalService } from '../../../services/add-prescription-modal.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-add-nurse-summary-modal',
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-nurse-summary-modal.component.html',
-  styleUrl: './add-nurse-summary-modal.component.css',
-  animations: [fadeInOut],
+  styleUrls: ['./add-nurse-summary-modal.component.css'],
+  imports: [ReactiveFormsModule, CommonModule],
 })
-export class AddSummaryModalComponent {
-  isOpen = false;
+export class AddSummaryModalComponent implements OnInit {
+  isOpen: boolean = false;
+  summaryForm: FormGroup;
+
   constructor(
     private addSummaryModalService: NurseDetailsModalService,
-    private fb: FormBuilder,
-    private addPrescriptionModalService: AddPrescriptionModalService
+    private addNurseSummaryService: AddNurseSummaryService,
+    private fb: FormBuilder
   ) {
     this.summaryForm = this.fb.group({
-      medications: ['', [Validators.required, Validators.minLength(5)]],
-      observation: ['', [Validators.required, Validators.minLength(5)]],
-      summary: ['', [Validators.required, Validators.minLength(1)]],
+      Description: ['', [Validators.required, Validators.minLength(5)]],
+      Date: ['', [Validators.required]],
     });
-  }
-  addPrescription() {
-    this.addPrescriptionModalService.openModal();
   }
 
-  @ViewChild('measureOptionsDropdown') measureOptionsDropdown!: ElementRef;
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (
-      this.measureOptionsDropdown &&
-      !this.measureOptionsDropdown.nativeElement.contains(event.target)
-    ) {
-      this.closeMeasureOptions();
-    }
-  }
-  summaryForm: FormGroup;
-  measureOptions = ['Blood Sugar', 'Blood Pressure'];
-  isMeasureOptionsOpen = false;
-  openMeasureOptions() {
-    this.isMeasureOptionsOpen = true;
-  }
-  closeMeasureOptions() {
-    this.isMeasureOptionsOpen = false;
-  }
-  setMeasure(measure: string) {
-    this.summaryForm.get('measure')?.setValue(measure);
-    this.closeMeasureOptions();
-  }
   ngOnInit(): void {
-    this.addSummaryModalService.isAddSummaryModalOpen$.subscribe((isOpen) => {
-      this.isOpen = isOpen;
+    this.addSummaryModalService.isAddSummaryModalOpen$.subscribe(
+      (isOpen) => {
+        this.isOpen = isOpen;
+      }
+    );
+
+    this.summaryForm = this.fb.group({
+      Description: ['', [Validators.required, Validators.minLength(5)]],
+      Date: ['', [Validators.required]],
+      PatientID: [30, [Validators.required]],  // Fixed patient ID
+      InfirmierID: [1, [Validators.required]], // Fixed nurse ID (Adjust dynamically if needed)
     });
   }
+
   closeModal() {
     this.addSummaryModalService.closeModal();
   }
 
   onSubmit() {
     if (this.summaryForm.valid) {
-      console.log('Form submitted:', this.summaryForm.value);
+      const formData = new FormData();
+      formData.append('Description', this.summaryForm.value.Description);
+      formData.append('Date', this.summaryForm.value.Date);
+      formData.append('PatientID', this.summaryForm.value.PatientID.toString());
+      formData.append('InfirmierID', this.summaryForm.value.InfirmierID.toString());
+
+
+      this.addNurseSummaryService.saveSummary(formData).subscribe({
+        next: (response) => {
+          console.log('✅ Nurse Summary saved successfully:', response);
+          this.summaryForm.reset();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('❌ Error saving Nurse Summary:', error);
+        },
+      });
+    } else {
+      console.error('⚠️ Form is invalid or missing required fields.');
     }
   }
-  summaryOptions: string[] = ['Summary 1', 'Summary 2', 'Summary 3', 'Summary 4'];
-
 }

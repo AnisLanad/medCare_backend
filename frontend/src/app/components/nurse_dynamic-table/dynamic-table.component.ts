@@ -5,9 +5,11 @@ import { TColumn } from '../../types/column.type';
 import { NursePatientModalComponent as NursePatientsModalComponent } from '../modals/nurse-patient-modal/nurse-patient-modal.component';
 import { NursePatientModalService } from '../../services/nurse-patient-modal.service';
 
+import { NurseDetailsModalService } from '../../services/add-nurse-summary-modal.service';
+import { AddSummaryModalComponent } from "../modals/add-nurse-summary-modal/add-nurse-summary-modal.component";
 @Component({
   selector: 'app-dynamic-table',
-  imports: [CommonModule, TablePaginationComponent,NursePatientsModalComponent],
+  imports: [CommonModule, TablePaginationComponent,NursePatientsModalComponent,AddSummaryModalComponent],
   templateUrl: './dynamic-table.component.html',
   styleUrl: './dynamic-table.component.css',
 })
@@ -34,13 +36,17 @@ export class DynamicTableComponent<T> implements OnChanges {
   }
   onPageChange(page: number) {
     this.currentPage = page;
-    this.updatePaginatedData();
+    this.updatePaginatedData(); 
   }
     constructor(
       private patientModalService : NursePatientModalService,
+      private nursePatientModalService: NurseDetailsModalService,
     ){}
     openpatientModal() {
       this.patientModalService.openModal();
+    }
+    addSummary() {
+      this.nursePatientModalService.openModal();
     }
   
 }

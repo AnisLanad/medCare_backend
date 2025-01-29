@@ -22,91 +22,59 @@
       id="modal-title"
       class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6"
     >
-      Add Summary
+      Add nurse observation and treatment
     </h2>
 
     <form class="space-y-6" [formGroup]="summaryForm" (ngSubmit)="onSubmit()">
-      <!-- Dropdown for Summary -->
-      <div>
-        <label for="summary" class="block text-sm font-medium text-gray-700">
-          Select Summary
-        </label>
-        <select
-          id="summary"
-          name="summary"
-          formControlName="summary"
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        >
-          <option value="" disabled selected>Select a summary</option>
-          <option *ngFor="let option of summaryOptions" [value]="option">
-            {{ option }}
-          </option>
-        </select>
-        <div
-          class="text-sm text-red-600 mt-1"
-          *ngIf="
-            summaryForm.get('summary')?.invalid &&
-            summaryForm.get('summary')?.touched
-          "
-        >
-          Summary is required.
-        </div>
-      </div>
-
-      <!-- Patient's Symptoms -->
-      <div>
-        <label
-          for="observation"
-          class="block text-sm font-medium text-gray-700"
-        >
-          Observation
-        </label>
-        <textarea
-          id="observation"
-          name="observation"
-          formControlName="observation"
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          placeholder="Enter observation"
-          rows="3"
-        ></textarea>
-        <div
-          class="text-sm text-red-600 mt-1"
-          *ngIf="
-            summaryForm.get('observation')?.invalid &&
-            summaryForm.get('observation')?.touched
-          "
-        >
-          Observation must be at least 5 characters.
-        </div>
-      </div>
-
-      <!-- Diagnostic -->
       <div>
         <label
           for="medications"
           class="block text-sm font-medium text-gray-700"
         >
-          Medications
+           
         </label>
-        <textarea
+        <textarea 
           id="medications"
-          name="medications"
-          formControlName="medications"
+          name="medications" 
+          formControlName="Description"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          placeholder="Enter medications"
+          placeholder="Enter your notes here"
           rows="3"
         ></textarea>
         <div
           class="text-sm text-red-600 mt-1"
           *ngIf="
-            summaryForm.get('medications')?.invalid &&
-            summaryForm.get('medications')?.touched
+            summaryForm.get('Description')?.invalid &&
+            summaryForm.get('Description')?.touched
           "
         >
           Medication must be at least 5 characters.
         </div>
       </div>
-
+      <div>
+        <label
+          for="date-signed"
+          class="block text-sm font-medium text-gray-600"
+        >
+          Date Signed
+        </label>
+        <input
+          id="date-signed"
+          type="date"
+          name="dateSigned"
+          formControlName="Date"
+          class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <div
+          class="text-sm text-red-600 mt-1" 
+          *ngIf="
+            summaryForm.get('Date')?.invalid &&
+            summaryForm.get('Date')?.touched
+          "
+        >
+          Date signed is required.
+        </div>
+      </div>
       <!-- Buttons -->
       <div class="flex justify-end space-x-4">
         <button

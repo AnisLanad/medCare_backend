@@ -98,20 +98,9 @@ class OrdonnanceSerializer(serializers.ModelSerializer):
             "id": obj.Consultation.Patient.id,
         }
 class SoininfirmierSerializer(serializers.ModelSerializer):
-    infirmier_nom_complet = serializers.SerializerMethodField()
-    patient_nom_complet = serializers.SerializerMethodField()
-
     class Meta:
         model = Soininfirmier
-        fields = ['id', 'Infirmier', 'Patient', 'Date', 'Description', 
-                 'infirmier_nom_complet', 'patient_nom_complet']
-
-    def get_infirmier_nom_complet(self, obj):
-        return f"{obj.Infirmier.Prenom} {obj.Infirmier.Nom}"
-
-    def get_patient_nom_complet(self, obj):
-        return f"{obj.Patient.Prenom} {obj.Patient.Nom}"
-
+        fields = '__all__'
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
