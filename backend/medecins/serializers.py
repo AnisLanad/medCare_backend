@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     Medecin, Infirmier, Laborantin, Consultation, Certificat,
     Medicament, Ordonnance, OrdonnanceMedicament, Soininfirmier,
-    Bilan, Image , CustomUser
+    Bilan, Image , CustomUser,Pharmacist
 )
 from patients.serializers import PatientSerializer  # Assure-toi que ce chemin est correct
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -93,20 +93,9 @@ class OrdonnanceSerializer(serializers.ModelSerializer):
         model = Ordonnance
         fields = ['id', 'Consultation', 'Medicaments', 'Description', 'ordonnance_medicaments']
 class SoininfirmierSerializer(serializers.ModelSerializer):
-    infirmier_nom_complet = serializers.SerializerMethodField()
-    patient_nom_complet = serializers.SerializerMethodField()
-
     class Meta:
         model = Soininfirmier
-        fields = ['id', 'Infirmier', 'Patient', 'Date', 'Description', 
-                 'infirmier_nom_complet', 'patient_nom_complet']
-
-    def get_infirmier_nom_complet(self, obj):
-        return f"{obj.Infirmier.Prenom} {obj.Infirmier.Nom}"
-
-    def get_patient_nom_complet(self, obj):
-        return f"{obj.Patient.Prenom} {obj.Patient.Nom}"
-
+        fields = '__all__'
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
@@ -157,3 +146,22 @@ class AllPatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ['DPI_ID', 'Nom', 'Prenom', 'DateNaissance', 'NSS']
+        
+from .models import RadioReport
+
+class RadioReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RadioReport
+        fields = '__all__'
+        
+from .models import LabReport
+
+class LabReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LabReport
+        fields = '__all__'
+
+class PharmacistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pharmacist
+        fields = ['id', 'Nom', 'Prenom', 'Telephone', 'Email']

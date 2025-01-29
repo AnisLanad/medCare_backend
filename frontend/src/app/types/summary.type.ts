@@ -1,10 +1,13 @@
 export type Tsummary = {
+  //----------------------------------------
+  
+  //----------------------------------------
   Consultation_ID: number;
   Datecons: string;
   Medecin: number;
   Motif: string;
   Patient: number;
-  PatientSymptoms: string;
+  PatientSymptoms: string; 
   diagnostic: string;
   diagnosticEstablished: boolean;
   measure: string;

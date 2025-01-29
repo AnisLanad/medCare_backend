@@ -8,18 +8,21 @@ from patients.models import Patient
 from datetime import date
 from rest_framework import status
 
-
+from rest_framework import status
+from .serializers import RadioReportSerializer
+from .models import RadioReport
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
     Medecin, Infirmier, Laborantin, Consultation, Certificat,
     Medicament, Ordonnance, OrdonnanceMedicament, Soininfirmier,
-    Bilan, Image , CustomUser
+    Bilan, Image , CustomUser,Pharmacist
 )
 from .serializers import (
     MedecinSerializer, InfirmierSerializer, LaborantinSerializer,
     ConsultationSerializer, ConsultationDetailSerializer, CertificatSerializer,
-    MedicamentSerializer, OrdonnanceSerializer, OrdonnanceMedicamentSerializer,
+    MedicamentSerializer, OrdonnanceSerializer, OrdonnanceMedicamentSerializer,PharmacistSerializer,
     SoininfirmierSerializer, BilanSerializer, ImageSerializer , CustomTokenObtainPairSerializer , AllPatientSerializer
 )
 
@@ -149,9 +152,15 @@ class OrdonnanceMedicamentViewSet(viewsets.ModelViewSet):
 class SoininfirmierViewSet(viewsets.ModelViewSet):
     queryset = Soininfirmier.objects.all()
     serializer_class = SoininfirmierSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ['Infirmier', 'Patient', 'Date']
-    ordering_fields = ['Date']
+    parser_classes = (MultiPartParser, FormParser) 
+    def create(self, request, *args, **kwargs):
+        print("Received Data:", request.data)  # Debugging
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print("Errors:", serializer.errors)  # Print validation errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 class BilanViewSet(viewsets.ModelViewSet):
     queryset = Bilan.objects.all()
@@ -212,4 +221,32 @@ class GetNbCons (APIView):
                          })
 
 
-        
+
+
+class RadioReportViewSet(viewsets.ModelViewSet):
+    queryset = RadioReport.objects.all()  # Required for ViewSet
+    serializer_class = RadioReportSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    
+from .models import LabReport
+from .serializers import LabReportSerializer
+
+class LabReportViewSet(viewsets.ModelViewSet):
+    queryset = LabReport.objects.all()
+    serializer_class = LabReportSerializer
+    parser_classes = (MultiPartParser, FormParser) 
+    
+class PharmacistViewSet(viewsets.ModelViewSet):
+    queryset = Pharmacist.objects.all()  # Get all pharmacists from the database
+    serializer_class = PharmacistSerializer  # Serializer class for Pharmacist
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['Name', 'Email']  # Allows searching by name or email
+    ordering_fields = ['Name', 'Email']  # Allows ordering by name or email
+    filterset_fields = ['Specialty']  # Filter pharmacists by their specialty
+
+    @action(detail=True, methods=['get'])
+    def messages(self, request, pk=None):
+        pharmacist = self.get_object()  # Retrieve the pharmacist object
+        messages = pharmacist.messages.all()  # Get all messages associated with this pharmacist
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)

@@ -1,0 +1,120 @@
+<div
+  *ngIf="isOpen"
+  id="modal"
+  role="dialog"
+  class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl p-4 sm:p-8 relative overflow-y-auto max-h-[95vh]"
+    role="document"
+  > 
+    <button
+      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      (click)="closeModal()"
+      aria-label="Close"
+    >
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+    <h2
+      id="modal-title"
+      class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6"
+    >
+      Radio Report
+    </h2>
+
+    <!-- Form -->
+    <form
+      class="space-y-6"
+      [formGroup]="prescriptionForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- Report Observation -->
+      <div>
+        <label for="observation" class="block text-sm font-medium text-gray-700">
+          Report
+        </label>
+        <textarea
+          id="observation"
+          name="observation"
+          formControlName="observation"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter observation"
+          rows="3"
+        ></textarea>
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            prescriptionForm.get('observation')?.invalid &&
+            prescriptionForm.get('observation')?.touched
+          "
+        >
+          Observation must be at least 5 characters.
+        </div>
+      </div>
+
+      <!-- File Upload -->
+      <div>
+        <label for="fileUpload" class="block text-sm font-medium text-gray-700">
+          Attach Radio
+        </label>
+        <div class="flex items-center gap-3">
+          <input
+            type="file"
+            id="fileUpload"
+            (change)="onFileSelected($event)"
+            class="hidden"
+          />
+          <label
+            for="fileUpload"
+            class="cursor-pointer px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          >
+            Choose File
+          </label>
+          <span class="text-sm text-gray-600" *ngIf="fileName">
+            {{ fileName }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Date Signed -->
+      <div>
+        <label for="dateSigned" class="block text-sm font-medium text-gray-700">
+          Date Signed
+        </label>
+        <input
+          id="dateSigned"
+          type="date"
+          formControlName="dateSigned"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <div
+          class="text-sm text-red-600 mt-1"
+          *ngIf="
+            prescriptionForm.get('dateSigned')?.invalid &&
+            prescriptionForm.get('dateSigned')?.touched
+          "
+        >
+          Date signed is required.
+        </div>
+      </div>
+
+      
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-4">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

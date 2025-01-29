@@ -80,9 +80,9 @@ class OrdonnanceMedicamentAdmin(admin.ModelAdmin):
 
 @admin.register(Soininfirmier)
 class SoininfirmierAdmin(admin.ModelAdmin):
-    list_display = ('Infirmier', 'Patient', 'Date')
-    list_filter = ('Date', 'Infirmier')
-    search_fields = ('Patient__Nom', 'Description')
+    list_display = ('InfirmierID', 'PatientID', 'Date')
+    list_filter = ('Date', 'InfirmierID')
+    search_fields = ('Description',)
     date_hierarchy = 'Date'
 
 class ImageInline(admin.TabularInline):
@@ -102,3 +102,24 @@ class ImageAdmin(admin.ModelAdmin):
     list_display = ('Titre', 'Bilan')
     search_fields = ('Titre', 'Bilan__Patient__Nom')
 # Register your models here.
+from .models import RadioReport
+
+@admin.register(RadioReport)
+class RadioReportAdmin(admin.ModelAdmin):
+    list_display = ('radiologistID', 'patientID', 'date_signed', 'signature_url')  # Customize fields shown
+    search_fields = ('radiologistID', 'patientID')
+    
+from .models import LabReport
+
+@admin.register(LabReport)
+class LabReportAdmin(admin.ModelAdmin):
+    list_display = ('id', 'labID', 'patientID', 'date_signed', 'generate_graph')
+    search_fields = ('patientID', 'labID')
+    list_filter = ('date_signed', 'generate_graph')
+    
+from .models import Pharmacist
+@admin.register(Pharmacist)
+class PharmacistAdmin(admin.ModelAdmin):
+    list_display = ('Nom', 'Prenom', 'Email', 'Telephone')
+    search_fields = ('Nom', 'Prenom', 'Email')
+    ordering = ('Nom', 'Prenom')

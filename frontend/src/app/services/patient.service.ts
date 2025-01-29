@@ -14,7 +14,7 @@ export class PatientService {
 
   constructor(private http: HttpClient) {
     this.loadPatients();
-  }
+  } 
 
   private loadPatients(): void {
     this.http.get<any[]>(`${this.apiUrl}/patients/`) // Utilisez `any[]` si la structure exacte varie.
