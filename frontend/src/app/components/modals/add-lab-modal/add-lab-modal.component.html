@@ -27,7 +27,7 @@
     <!-- form -->
     <form
       class="space-y-6"
-      [formGroup]="prescriptionForm"
+      [formGroup]="labReportForm"
       (ngSubmit)="onSubmit()"
     >
       <!-- Personal Information -->
@@ -49,8 +49,8 @@
           <div
             class="text-sm text-red-600 mt-1"
             *ngIf="
-              prescriptionForm.get('blood_pressure')?.invalid &&
-              prescriptionForm.get('blood_pressure')?.touched
+              labReportForm.get('blood_pressure')?.invalid &&
+              labReportForm.get('blood_pressure')?.touched
             "
           ></div>
         </div>
@@ -71,8 +71,8 @@
           <div
             class="text-sm text-red-600 mt-1"
             *ngIf="
-              prescriptionForm.get('blood_sugar')?.invalid &&
-              prescriptionForm.get('blood_sugar')?.touched
+              labReportForm.get('blood_sugar')?.invalid &&
+              labReportForm.get('blood_sugar')?.touched
             "
           ></div>
         </div>
@@ -99,8 +99,8 @@
           <div
             class="text-sm text-red-600 mt-1"
             *ngIf="
-              prescriptionForm.get('cholesterol')?.invalid &&
-              prescriptionForm.get('cholesterol')?.touched
+              labReportForm.get('cholesterol')?.invalid &&
+              labReportForm.get('cholesterol')?.touched
             "
           ></div>
         </div>
@@ -118,8 +118,8 @@
           <div
             class="text-sm text-red-600 mt-1"
             *ngIf="
-              prescriptionForm.get('Na')?.invalid &&
-              prescriptionForm.get('Na')?.touched
+              labReportForm.get('Na')?.invalid &&
+              labReportForm.get('Na')?.touched
             "
           ></div>
         </div>
@@ -140,8 +140,8 @@
           <div
             class="text-sm text-red-600 mt-1"
             *ngIf="
-              prescriptionForm.get('hemoglobine')?.invalid &&
-              prescriptionForm.get('hemoglobine')?.touched
+              labReportForm.get('hemoglobine')?.invalid &&
+              labReportForm.get('hemoglobine')?.touched
             "
           ></div>
         </div>
@@ -159,8 +159,8 @@
           <div
             class="text-sm text-red-600 mt-1"
             *ngIf="
-              prescriptionForm.get('iron')?.invalid &&
-              prescriptionForm.get('iron')?.touched
+              labReportForm.get('iron')?.invalid &&
+              labReportForm.get('iron')?.touched
             "
           ></div>
         </div>
@@ -196,65 +196,14 @@
         <div
           class="text-sm text-red-600 mt-1"
           *ngIf="
-            prescriptionForm.get('dateSigned')?.invalid &&
-            prescriptionForm.get('dateSigned')?.touched
+            labReportForm.get('dateSigned')?.invalid &&
+            labReportForm.get('dateSigned')?.touched
           "
         >
           Date signed is required.
         </div>
       </div>
 
-      <!-- Doctor's Signature -->
-      <div>
-        <label for="signature" class="block text-sm font-medium text-gray-600">
-          Doctor's Signature
-        </label>
-        <div
-          *ngIf="!isSignaturePadOpen && !signatureUrl"
-          class="flex items-center justify-between p-4 border rounded-lg bg-gray-50"
-        >
-          <div class="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6 text-gray-400"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M16 6h.01M3.23 8.21l9.62 9.62a1 1 0 00.71.29h5.06a1 1 0 001-1v-5.06a1 1 0 00-.29-.71l-9.62-9.62a1 1 0 00-1.42 0l-5.06 5.06a1 1 0 000 1.42z"
-              />
-            </svg>
-            <span class="text-sm text-gray-500"> No signature added </span>
-          </div>
-          <button
-            (click)="openSignaturePad()"
-            type="button"
-            class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            Sign
-          </button>
-        </div>
-        <ng-container *ngIf="isSignaturePadOpen">
-          <app-signature-pad
-            (onSaveSignature)="saveSignature($event)"
-          ></app-signature-pad>
-        </ng-container>
-        <div *ngIf="signatureUrl" class="relative">
-          <button
-            (click)="removeSignature()"
-            type="button"
-            title="Remove signature"
-            class="absolute top-2 right-2 text-lg font-medium text-red-600 hover:text-red-800 focus:outline-none"
-          >
-            <i class="fas fa-trash"></i>
-          </button>
-          <img [src]="signatureUrl" alt="Signature" class="w-full" />
-        </div>
-      </div>
 
       <!-- Action Buttons -->
       <div class="flex items-center justify-between">

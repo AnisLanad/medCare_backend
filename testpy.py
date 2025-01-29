@@ -8,7 +8,7 @@ endpoints = [
     "laborantins/",
     "patients/",
     "antecedents/",
-    "consultations/",
+    "consultations/", 
     "certificats/",
     "ordonnances/",
     "medicaments/",
@@ -16,6 +16,7 @@ endpoints = [
     "soins-infirmiers/",
     "bilans/",
     "images/",
+    "radio_report/",
 ]
 
 # Tester chaque endpoint

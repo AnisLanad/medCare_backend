@@ -9,7 +9,7 @@ export class AddPrescriptionModalService {
   closeModal() {
     this.isAddPrescriptionModalOpen.next(false);
   }
-  openModal() {
+  openModal() { 
     this.isAddPrescriptionModalOpen.next(true);
     console.log('Modal service triggered');
   }

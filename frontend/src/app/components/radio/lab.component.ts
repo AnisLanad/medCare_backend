@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { TColumn } from '../../types/column.type';
 import { DynamicTableComponent } from '../radio_table/dynamic-table.component';
 import { FormsModule } from '@angular/forms';
-import { Tpharmacist } from '../../types/pharmacist.type';
+import { Tpatient } from '../../types/patient2.type';
+import { PatientService } from '../../services/patient.service';
 
 
 @Component({
@@ -14,87 +15,58 @@ import { Tpharmacist } from '../../types/pharmacist.type';
 export class PatientsComponent {
 
 
-  patientsColumns: TColumn<Tpharmacist>[] = [
-    { key: 'id', label: 'ID' },
-    { key: 'prescreption', label: 'Radio' },
-    { key: 'doctor', label: 'Doctor' },
-    { key: 'patient', label: 'Patient' },
-    { key: 'date', label: 'Date' },
+  patientsColumns: TColumn<Tpatient>[] = [
+      { key: 'id', label: 'ID' },
+      { key: 'firstName', label: 'First Name' },
+      { key: 'lastName', label: 'Last Name' },
+      { key: 'birthDate', label: 'Birth Date' },
+      { key: 'nss', label: 'NSS' },
   ];
-  prescreptions: Tpharmacist[] = [
-    {
-      id: 1,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    {
-      id: 2,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    {
-      id: 3,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    {
-      id: 4,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    {
-      id: 5,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    {
-      id: 6,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    {
-      id: 7,
-      prescreption: 'Lexin',
-      doctor: 'John',
-      patient: 'Amal',
-      date: '1985-03-12',
-    },
-    
-    // Repeat similar realistic entries for the next 50 patients
-  ];
-  filteredPrescreptions: Tpharmacist[] = [...this.prescreptions];
-  searchText = '';
-  filterPatients() {
-    if (this.searchText === '') {
-      this.filteredPrescreptions = [...this.prescreptions];
-      return;
+  patients: Tpatient[] = [];
+    filteredPatients: Tpatient[] = [];
+    searchText = '';
+  
+    constructor(private patientService: PatientService) {}
+  
+    ngOnInit(): void {
+      // Fetch patients data from the service
+      this.patientService.getPatients().subscribe({
+        next: (patients) => {
+          // Map the fetched data to Tpatient structure
+          this.patients = patients.map((patient) => ({
+            id: patient.id!,
+            firstName: patient.name.first,
+            lastName: patient.name.last,
+            birthDate: patient.birthDate,
+            nss: patient.nss!,
+          }));
+          this.filteredPatients = [...this.patients]; // Initialize filtered patients
+        },
+        error: (error) => {
+          console.error('Error fetching patients:', error);
+        },
+      });
     }
-    this.filteredPrescreptions = this.prescreptions.filter((prescreption__) => {
-      return (
-        prescreption__.doctor
-          .toLowerCase()
-          .includes(this.searchText.toLowerCase()) ||
-        prescreption__.patient
-          .toLowerCase()
-          .includes(this.searchText.toLowerCase()) ||
-        prescreption__.prescreption.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        prescreption__.id.toString().includes(this.searchText)
-      );
-    });
-  }
-  action(data: Tpharmacist) {
+  
+    filterPatients(): void {
+      if (this.searchText === '') {
+        this.filteredPatients = [...this.patients];
+        return;
+      }
+      this.filteredPatients = this.patients.filter((patient) => {
+        return (
+          patient.firstName
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          patient.lastName
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          patient.nss.toLowerCase().includes(this.searchText.toLowerCase()) ||
+          patient.id.toString().includes(this.searchText)
+        );
+      });
+    }
+  action(data: Tpatient) {
     
     alert(JSON.stringify(data));
   }

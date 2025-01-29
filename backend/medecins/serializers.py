@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     Medecin, Infirmier, Laborantin, Consultation, Certificat,
     Medicament, Ordonnance, OrdonnanceMedicament, Soininfirmier,
-    Bilan, Image , CustomUser
+    Bilan, Image , CustomUser,Pharmacist
 )
 from patients.serializers import PatientSerializer  # Assure-toi que ce chemin est correct
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -162,3 +162,22 @@ class AllPatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ['DPI_ID', 'Nom', 'Prenom', 'DateNaissance', 'NSS']
+        
+from .models import RadioReport
+
+class RadioReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RadioReport
+        fields = '__all__'
+        
+from .models import LabReport
+
+class LabReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LabReport
+        fields = '__all__'
+
+class PharmacistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pharmacist
+        fields = ['id', 'Nom', 'Prenom', 'Telephone', 'Email']

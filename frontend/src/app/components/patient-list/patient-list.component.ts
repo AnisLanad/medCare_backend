@@ -5,7 +5,7 @@ import { PatientRowComponent } from '../patient-row/patient-row.component';
 import { PatientService } from '../../services/patient.service';
 import { Patient } from '../modals/patient.interface';
 import { HttpClientModule } from '@angular/common/http';
-
+ 
 @Component({
   selector: 'app-patient-list',
   standalone: true,

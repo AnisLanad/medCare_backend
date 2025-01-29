@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'medecins',
     'patients',
-    'administrateurs'
+    'administrateurs',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -200,6 +201,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json',
+    'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema'
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API Documentation',
 }
 # AUTH_USER_MODEL = 'medecins.CustomUser'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

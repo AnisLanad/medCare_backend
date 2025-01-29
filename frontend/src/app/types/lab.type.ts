@@ -5,3 +5,4 @@ export type Tpharmacist = {
   patient: string;
   date: string;
 };
+ 

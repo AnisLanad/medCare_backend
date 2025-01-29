@@ -30,7 +30,7 @@ export class DynamicTableComponent<T> implements OnChanges {
     this.paginatedData = this.data.slice(
       startIndex,
       startIndex + this.pageSize
-    );
+    ); 
   }
   onPageChange(page: number) {
     this.currentPage = page;

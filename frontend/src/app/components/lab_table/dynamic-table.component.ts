@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TColumn } from '../../types/column.type';
-import { AddPrescriptionModalComponent } from '../modals/add-lab-modal/add-lab-modal.component';
+import { AddLabModalComponent } from '../modals/add-lab-modal/add-lab-modal.component';
 import { AddPrescriptionModalService } from '../../services/add-lab-modal.service';
 
 
 @Component({
   selector: 'app-dynamic-table', 
-  imports: [CommonModule, TablePaginationComponent,    AddPrescriptionModalComponent],
+  imports: [CommonModule, TablePaginationComponent, AddLabModalComponent],
   templateUrl: './dynamic-table.component.html',
   styleUrl: './dynamic-table.component.css',
 })

@@ -2,14 +2,14 @@
   <div class="p-6 bg-white shadow rounded-lg">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-blue-700">Required Lab Tests</h1>
+      <h1 class="text-3xl font-bold text-blue-700">Patients</h1>
       <div class="relative">
-        <input
+        <input 
           type="text"
           name="searchText"
           [(ngModel)]="searchText"
           (input)="filterPatients()"
-          placeholder="Search by doctor name, ID, patient name"
+          placeholder="Search by name, ID, NSS"
           class="w-72 px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
         />
         <i
@@ -20,11 +20,9 @@
 
     <app-dynamic-table
       [columns]="patientsColumns"
-      [data]="filteredPrescreptions"
+      [data]="filteredPatients"
       [action]="action"
       [pageSize]="3"
     />
   </div>
-
-
 </div>

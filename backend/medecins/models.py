@@ -119,7 +119,7 @@ class Ordonnance(models.Model):
      Valid = models.BooleanField(default=False)
      
 
-     def __str__(self):
+     def __str__(self):                                                                         
         return f"Ordonnance #{self.id} pour {self.Consultation.Patient} par Dr. {self.Consultation.Medecin}"
           
 
@@ -208,3 +208,38 @@ def create_user_for_medecin(sender, instance, created, **kwargs):
         user.set_password(instance.Telephone)
         user.save()
         
+        
+class RadioReport(models.Model):
+    radiologistID = models.IntegerField()
+    patientID = models.IntegerField()
+    image = models.ImageField(upload_to='radio_reports/')
+    description = models.TextField(max_length=1200)
+    date_signed = models.DateField()
+    signature_url = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Report by {self.radiologistID} for {self.patientID}"
+    
+    
+class LabReport(models.Model):
+    labID = models.IntegerField()
+    patientID = models.IntegerField()
+    generate_graph = models.BooleanField(default=False)
+    blood_pressure = models.CharField(max_length=50, blank=True, null=True)
+    blood_sugar = models.CharField(max_length=50, blank=True, null=True)
+    cholesterol = models.FloatField(blank=True, null=True)
+    Na = models.FloatField(blank=True, null=True)
+    hemoglobine = models.FloatField(blank=True, null=True)
+    iron = models.FloatField(blank=True, null=True)
+    date_signed = models.DateField()
+
+    def __str__(self):
+        return f"Lab Report {self.id} - Patient {self.patientID}"
+    
+class Pharmacist(models.Model):
+    Nom = models.TextField()
+    Prenom = models.TextField()
+    Telephone = models.TextField(max_length=15)
+    Email = models.EmailField()    
+    def __str__(self):
+        return f"Pharmacist {self.Nom} {self.Prenom} "

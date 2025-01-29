@@ -21,7 +21,9 @@ from patients import views as patiens_views
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from medecins.views import CustomTokenObtainPairView , GetNomPrenom , GetPatients , GetNbCons
 from administrateurs import views as admin_views
-
+from django.conf import settings
+from django.conf.urls.static import static
+from medecins.views import LabReportViewSet
 # Création du router pour l'API
 router = DefaultRouter()
 
@@ -54,6 +56,9 @@ router.register(r'ordonnance-medicaments', medecins_views.OrdonnanceMedicamentVi
 router.register(r'soins-infirmiers', medecins_views.SoininfirmierViewSet)
 router.register(r'bilans', medecins_views.BilanViewSet)
 router.register(r'images', medecins_views.ImageViewSet)
+router.register(r'radio_report', medecins_views.RadioReportViewSet, basename='radio_report')
+router.register(r'lab_report', LabReportViewSet, basename='lab_report')
+router.register(r'pharmacists', medecins_views.PharmacistViewSet)
 
 urlpatterns = [
     # URL d'administration Django
@@ -68,4 +73,7 @@ urlpatterns = [
     
     # URLs d'authentification de l'API
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-]
+    
+    
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

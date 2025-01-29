@@ -13,12 +13,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
     Medecin, Infirmier, Laborantin, Consultation, Certificat,
     Medicament, Ordonnance, OrdonnanceMedicament, Soininfirmier,
-    Bilan, Image , CustomUser
+    Bilan, Image , CustomUser,Pharmacist
 )
 from .serializers import (
     MedecinSerializer, InfirmierSerializer, LaborantinSerializer,
     ConsultationSerializer, ConsultationDetailSerializer, CertificatSerializer,
-    MedicamentSerializer, OrdonnanceSerializer, OrdonnanceMedicamentSerializer,
+    MedicamentSerializer, OrdonnanceSerializer, OrdonnanceMedicamentSerializer,PharmacistSerializer,
     SoininfirmierSerializer, BilanSerializer, ImageSerializer , CustomTokenObtainPairSerializer , AllPatientSerializer
 )
 
@@ -178,5 +178,36 @@ class GetNbCons (APIView):
                 "patient2" :{ personne2.Nom +" "+ personne2.Prenom} 
                          })
 
+from rest_framework import status
+from .serializers import RadioReportSerializer
+from .models import RadioReport
+from rest_framework.parsers import MultiPartParser, FormParser
 
-        
+
+class RadioReportViewSet(viewsets.ModelViewSet):
+    queryset = RadioReport.objects.all()  # Required for ViewSet
+    serializer_class = RadioReportSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    
+from .models import LabReport
+from .serializers import LabReportSerializer
+
+class LabReportViewSet(viewsets.ModelViewSet):
+    queryset = LabReport.objects.all()
+    serializer_class = LabReportSerializer
+    parser_classes = (MultiPartParser, FormParser) 
+    
+class PharmacistViewSet(viewsets.ModelViewSet):
+    queryset = Pharmacist.objects.all()  # Get all pharmacists from the database
+    serializer_class = PharmacistSerializer  # Serializer class for Pharmacist
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['Name', 'Email']  # Allows searching by name or email
+    ordering_fields = ['Name', 'Email']  # Allows ordering by name or email
+    filterset_fields = ['Specialty']  # Filter pharmacists by their specialty
+
+    @action(detail=True, methods=['get'])
+    def messages(self, request, pk=None):
+        pharmacist = self.get_object()  # Retrieve the pharmacist object
+        messages = pharmacist.messages.all()  # Get all messages associated with this pharmacist
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)
