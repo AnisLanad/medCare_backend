@@ -46,10 +46,10 @@ export const routes: Routes = [
           import('./components/settings/settings.component').then(
             (m) => m.SettingsComponent
           ),
-        title: 'Settings', 
+        title: 'Settings',
       },
       {
-        path: 'nurse_patients',
+        path: 'nurse',
         loadComponent: () =>
           import('./components/nurse_patients/patients.component').then(
             (m) => m.PatientsComponent
@@ -89,7 +89,7 @@ export const routes: Routes = [
         (m) => m.PatientDashboardComponent
       ),
   },
-  
+
   {
     path: 'admin',
     loadComponent: () =>
@@ -129,7 +129,9 @@ export const routes: Routes = [
       {
         path: 'lab',
         loadComponent: () =>
-          import('./components/lab/lab.component').then((m) => m.PatientsComponent),
+          import('./components/lab/lab.component').then(
+            (m) => m.PatientsComponent
+          ),
         title: 'Lab',
       },
       {
@@ -140,7 +142,6 @@ export const routes: Routes = [
           ),
         title: 'Nurse',
       },
-      
     ],
   },
   // 404

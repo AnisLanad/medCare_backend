@@ -117,10 +117,8 @@ export class AddAssessmentModalComponent implements OnInit {
         Informations: this.assessmentForm.get('assessments')?.value[0],
       };
       this.assessmentService.addAssessment(data).subscribe((data) => {
-        this.addAssessmentModalService.closeModal();
+        this.closeModal();
       });
-
-      this.closeModal();
     }
   }
   saveSignature(signatureUrl: string) {

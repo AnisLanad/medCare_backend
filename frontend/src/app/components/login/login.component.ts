@@ -42,6 +42,13 @@ export class LoginComponent {
           this.router.navigate(['/lab']);
         } else if (email.endsWith('@admin.com') && password == 'admin123') {
           this.router.navigate(['/admin']);
+        } else if (email.endsWith('@radio.com') && password == 'radio123') {
+          this.router.navigate(['/radio']);
+        } else if (
+          email.endsWith('@pharmacist.com') &&
+          password == 'pharmacist123'
+        ) {
+          this.router.navigate(['/pharmacist']);
         }
         this.loading = false;
       }
