@@ -91,12 +91,7 @@ class OrdonnanceSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ordonnance
-        fields = ['id', 'Consultation', 'Medicaments', 'Description', 'ordonnance_medicaments','Patient']
-    def get_Patient(self, obj):
-        # Retrieve the Patient through the related Consultation model
-        return {
-            "id": obj.Consultation.Patient.id,
-        }
+        fields = ['id', 'Consultation', 'Medicaments', 'Description', 'ordonnance_medicaments']
 class SoininfirmierSerializer(serializers.ModelSerializer):
     infirmier_nom_complet = serializers.SerializerMethodField()
     patient_nom_complet = serializers.SerializerMethodField()

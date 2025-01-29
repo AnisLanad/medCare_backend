@@ -12,6 +12,7 @@ import { AddPrescriptionModalService } from '../../../services/add-prescription-
 import { Tpatient } from '../../../types/patient.type';
 import { SearchedPatientService } from '../../../services/SearchedPatient/searched-patient.service';
 import { SummaryService } from '../../../services/summaryService/summary.service';
+import { Tsummary } from '@app/types/summary.type';
 
 @Component({
   selector: 'app-add-summary-modal',
@@ -23,6 +24,7 @@ import { SummaryService } from '../../../services/summaryService/summary.service
 export class AddSummaryModalComponent {
   isOpen = false;
   patient: Tpatient | null = null;
+  patientSummary: Tsummary[] = [];
   constructor(
     private addSummaryModalService: AddSummaryModalService,
     private fb: FormBuilder,
@@ -74,6 +76,9 @@ export class AddSummaryModalComponent {
     this.searchedPatientService.SearchedPatient$.subscribe((patient) => {
       this.patient = patient;
     });
+    this.searchedPatientService.patientSummary$.subscribe((patientSummary) => {
+      this.patientSummary = patientSummary;
+    });
   }
   closeModal() {
     this.addSummaryModalService.closeModal();
@@ -87,10 +92,12 @@ export class AddSummaryModalComponent {
         Medecin: 2,
         Motif: 'General consultation',
       };
-      console.log('Form submitted:', data);
-      this.summaryService
-        .addSummary(data)
-        .subscribe((data) => console.log(data));
+      this.summaryService.addSummary(data).subscribe((data) => {
+        this.searchedPatientService.setPatientSummary([
+          ...this.patientSummary,
+          data,
+        ]);
+      });
     }
   }
 }

@@ -14,7 +14,7 @@ export class PrescriptionService {
   }
   getPatientPrescriptions(patientId: number) {
     return this.http.get(
-      `${this.BASE_URL}/consultations/${patientId}/by_patient/`
+      `${this.BASE_URL}/ordonnances/by_patient/?patient_id=${patientId}`
     );
   }
   constructor(private http: HttpClient) {}

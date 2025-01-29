@@ -1,7 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-doctor-navbar',
@@ -45,18 +44,16 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DoctorNavbarComponent {
   nomPrenom: { Nom: string; Prenom: string } | null = null;
-  constructor( private authService: AuthService) {}
-  
+  constructor(private authService: AuthService) {}
+
   ngOnInit() {
     this.authService.getUserName().subscribe((data) => {
       this.nomPrenom = data;
     });
   }
-  
+
   isDropdownOpen: boolean = false;
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-  
-
 }

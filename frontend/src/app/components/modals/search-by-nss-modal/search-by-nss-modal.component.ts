@@ -73,7 +73,6 @@ export class SearchByNssModalComponent implements OnInit {
               .getPatientPrescriptions(data[0].DPI_ID)
               .subscribe((data) => {
                 console.log(data);
-                this.searchedPatientService.setPatientPrescriptions(data);
               });
             this.patientModalService.openModal();
           } else {

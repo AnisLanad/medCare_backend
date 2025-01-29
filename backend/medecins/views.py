@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
 from patients.models import Patient
 from datetime import date
+from rest_framework import status
 
 
 
@@ -100,12 +101,44 @@ class OrdonnanceViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['Consultation']
 
+
     @action(detail=True, methods=['get'])
     def medicaments(self, request, pk=None):
         ordonnance = self.get_object()
         ordonnance_medicaments = ordonnance.ordonnance_medicaments.all()
         serializer = OrdonnanceMedicamentSerializer(ordonnance_medicaments, many=True)
         return Response(serializer.data)
+   
+    @action(detail=False, methods=['get'])
+    def by_patient(self, request):
+        """
+        Get ordonnances by patient ID
+        """
+        patient_id = request.query_params.get('patient_id')  # Get patient_id from query params
+        if not patient_id:
+            return Response({"detail": "Patient ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+       
+        try:
+            # Fetch the patient object
+            
+            patient = Patient.objects.get(DPI_ID=patient_id)
+
+
+            # Get ordonnances related to this patient
+            ordonnances = Ordonnance.objects.filter(Consultation__Patient=patient.DPI_ID)
+            print(ordonnances)
+
+
+            # Serialize the ordonnances
+            serializer = OrdonnanceSerializer(ordonnances, many=True)
+
+
+            # Return the serialized data
+            return Response(serializer.data)
+
+
+        except Patient.DoesNotExist:
+            return Response({"detail": "Patient not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class OrdonnanceMedicamentViewSet(viewsets.ModelViewSet):
     queryset = OrdonnanceMedicament.objects.all()
