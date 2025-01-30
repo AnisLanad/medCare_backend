@@ -23,8 +23,8 @@ export class DynamicTableComponent<T> implements OnChanges {
       private searchByNssModalService: AddPrescriptionModalService,
      
     ) {}
-    openSearchByNssModal() {
-      this.searchByNssModalService.openModal();
+    openSearchByNssModal(patient: any) {
+      this.searchByNssModalService.openModal(patient.nss);
     }
   @Input() data: T[] = [];
   @Input() columns: TColumn<T>[] = [];
