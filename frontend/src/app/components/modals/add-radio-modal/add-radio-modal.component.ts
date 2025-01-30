@@ -50,6 +50,11 @@ export class AddPrescriptionModalComponent implements OnInit {
     return this.isModalOpen.getValue();
   }
   ngOnInit(): void {
+    this.addPrescriptionModalService.patientID$.subscribe((patientID) => {
+      if (patientID) {
+        this.prescriptionForm.patchValue({ patientID: patientID.toString() });
+      }
+    });
     this.addPrescriptionModalService.isAddPrescriptionModalOpen$.subscribe(
       (isOpen) => {
         this.isOpen = isOpen;

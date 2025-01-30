@@ -27,18 +27,25 @@ export class AddSummaryModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.summaryForm = this.fb.group({
+      Description: ['', [Validators.required, Validators.minLength(5)]],
+      Date: ['', [Validators.required]],
+      PatientID: [null, [Validators.required]],  // Ensure it's initialized
+      InfirmierID: [1, [Validators.required]], // Fixed nurse ID
+    });
+    this.addSummaryModalService.patientID$.subscribe((patientID) => {
+      if (patientID !== null && patientID !== undefined) {
+        console.log("Setting PatientID:", patientID); // Debugging log
+        this.summaryForm.patchValue({ PatientID: patientID });
+      }
+    });
     this.addSummaryModalService.isAddSummaryModalOpen$.subscribe(
       (isOpen) => {
         this.isOpen = isOpen;
       }
     );
 
-    this.summaryForm = this.fb.group({
-      Description: ['', [Validators.required, Validators.minLength(5)]],
-      Date: ['', [Validators.required]],
-      PatientID: [30, [Validators.required]],  // Fixed patient ID
-      InfirmierID: [1, [Validators.required]], // Fixed nurse ID (Adjust dynamically if needed)
-    });
+    
   }
 
   closeModal() {
@@ -48,10 +55,15 @@ export class AddSummaryModalComponent implements OnInit {
   onSubmit() {
     if (this.summaryForm.valid) {
       const formData = new FormData();
+      console.log("Form Values:", this.summaryForm.value);
       formData.append('Description', this.summaryForm.value.Description);
       formData.append('Date', this.summaryForm.value.Date);
-      formData.append('PatientID', this.summaryForm.value.PatientID.toString());
-      formData.append('InfirmierID', this.summaryForm.value.InfirmierID.toString());
+      if (this.summaryForm.value.PatientID) {
+        formData.append('PatientID', this.summaryForm.value.PatientID.toString());
+      } else {
+        console.error("❌ PatientID is missing!");
+        return; // Stop submission if PatientID is missing
+      }      formData.append('InfirmierID', this.summaryForm.value.InfirmierID.toString());
 
 
       this.addNurseSummaryService.saveSummary(formData).subscribe({

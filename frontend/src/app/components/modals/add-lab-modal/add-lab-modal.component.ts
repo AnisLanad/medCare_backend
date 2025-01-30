@@ -22,7 +22,7 @@ export class AddLabModalComponent implements OnInit {
     private labReportService: LabReportService, // Inject LabReportService
     private fb: FormBuilder
   ) {
-    this.labReportForm = this.fb.group({
+    this.labReportForm = this.fb.group({ 
       generate_graph: [false], 
       blood_pressure: ['', [Validators.maxLength(50)]],
       blood_sugar: ['', [Validators.maxLength(50)]],
@@ -52,12 +52,16 @@ export class AddLabModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.addPrescriptionModalService.patientID$.subscribe((patientID) => {
+      if (patientID) {
+        this.labReportForm.patchValue({ patientID: patientID.toString() });
+      }
+    });
     this.addPrescriptionModalService.isAddPrescriptionModalOpen$.subscribe(
       (isOpen) => {
         this.isOpen = isOpen;
       }
     );
-    // Set static values for patientID and labID (same as in your backend)
     this.labReportForm = this.fb.group({
       generate_graph: [false],
       blood_pressure: ['', [Validators.maxLength(50)]],

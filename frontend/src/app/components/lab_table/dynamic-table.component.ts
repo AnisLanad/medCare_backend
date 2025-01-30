@@ -17,14 +17,14 @@ import { AddPrescriptionModalService } from '../../services/add-lab-modal.servic
   imports: [CommonModule, TablePaginationComponent, AddLabModalComponent],
   templateUrl: './dynamic-table.component.html',
   styleUrl: './dynamic-table.component.css',
-})
+})  
 export class DynamicTableComponent<T> implements OnChanges {
   constructor(
       private searchByNssModalService: AddPrescriptionModalService,
      
     ) {}
-    openSearchByNssModal() {
-      this.searchByNssModalService.openModal();
+    openSearchByNssModal(patient: any) {
+      this.searchByNssModalService.openModal(patient.nss);
     }
   @Input() data: T[] = [];
   @Input() columns: TColumn<T>[] = [];
@@ -32,7 +32,9 @@ export class DynamicTableComponent<T> implements OnChanges {
   @Input() action: (data: T) => void = () => {};
   currentPage: number = 1;
   totalPages: number = 1;
+  
   paginatedData: T[] = [];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.totalPages = Math.ceil(this.data.length / this.pageSize);

@@ -27,7 +27,7 @@ export class NursePatientModalComponent implements OnInit {
   ) {}
 
   addSummary() {
-    this.nursePatientModalService.openModal();
+    // this.nursePatientModalService.openModal();
   }
   isOpen = false;
   tabs: Ttab[] = [
@@ -78,5 +78,6 @@ export class NursePatientModalComponent implements OnInit {
 
   summaryAction(data: Tsummary) {
     alert(JSON.stringify(data));
-  }
+  } 
 }
+ 
