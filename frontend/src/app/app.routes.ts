@@ -80,6 +80,15 @@ export const routes: Routes = [
           ),
         title: 'Radiologist',
       },
+      {
+        path: 'xxx',
+        loadComponent: () =>
+          import('./components/lab-reports/lab-reports.component').then(
+            (m) => m.LabReportsComponent
+          ),
+        title: 'LabReport',
+      },
+
     ],
   },
   {

@@ -13,4 +13,7 @@ export class LabReportService {
   saveReport(reportData: any): Observable<any> {
     return this.http.post(this.apiUrl, reportData);
   }
+  getReports(): Observable<any[]> { 
+    return this.http.get<any[]>(this.apiUrl); 
+  }
 }

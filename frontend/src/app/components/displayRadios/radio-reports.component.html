@@ -1,0 +1,38 @@
+<div class="flex justify-center items-start bg-gray-100 p-4">
+    <div class="bg-white shadow-lg rounded-2xl p-6 max-w-2xl w-full text-center" *ngIf="reports.length > 0; else loading">
+      
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Report Date: {{ reports[currentIndex]?.date_signed }}</h2>
+      <p class="text-gray-600 mb-4">{{ reports[currentIndex]?.description }}</p>
+  
+      <button 
+        (click)="downloadReportImage(reports[currentIndex]?.image)" 
+        class="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200">
+        📥 Download Image
+      </button>
+  
+      <div class="flex items-center justify-between mt-6">
+        <button 
+          (click)="prevReport()" 
+          [disabled]="currentIndex === 0"
+          class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
+          ⬅️ Previous
+        </button>
+  
+        <span class="text-lg font-semibold text-gray-700">
+          {{ currentIndex + 1 }} / {{ reports.length }}
+        </span>
+  
+        <button 
+          (click)="nextReport()" 
+          [disabled]="currentIndex === reports.length - 1"
+          class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
+          Next ➡️
+        </button>
+      </div>
+    </div>
+  
+    <ng-template #loading>
+      <p class="text-gray-600 text-lg">Loading reports...</p>
+    </ng-template>
+  </div>
+  

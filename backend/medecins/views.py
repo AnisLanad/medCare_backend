@@ -227,6 +227,8 @@ class RadioReportViewSet(viewsets.ModelViewSet):
     queryset = RadioReport.objects.all()  # Required for ViewSet
     serializer_class = RadioReportSerializer
     parser_classes = (MultiPartParser, FormParser)
+    def get_queryset(self):
+        return RadioReport.objects.filter(patientID=12345)
     
 from .models import LabReport
 from .serializers import LabReportSerializer
@@ -234,7 +236,9 @@ from .serializers import LabReportSerializer
 class LabReportViewSet(viewsets.ModelViewSet):
     queryset = LabReport.objects.all()
     serializer_class = LabReportSerializer
-    parser_classes = (MultiPartParser, FormParser) 
+    parser_classes = (MultiPartParser, FormParser)
+    def get_queryset(self):
+        return LabReport.objects.filter(patientID=12345) 
     
 class PharmacistViewSet(viewsets.ModelViewSet):
     queryset = Pharmacist.objects.all()  # Get all pharmacists from the database
